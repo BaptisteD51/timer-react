@@ -48,6 +48,20 @@ function Track() {
         return timers
     }
 
+    // Adds another timer
+    function addNewTimer(){
+        let newId = parseInt(Math.random()*10**6)
+        let newTimer = {
+            running: false,
+            duration: 5,
+            current: 0,
+            id: newId,
+        }
+        let updatedTimers = [...timers]
+        updatedTimers.push(newTimer)
+        updateTimers(updatedTimers)
+    }
+
     if (isRunning) {
         return (
             <div className="max-w-md">
@@ -79,6 +93,11 @@ function Track() {
                     {timers.map((timer) => (
                         <Timer key={timer.id} duration={timer.duration} current={timer.current} id={timer.id} isRunning={isRunning}></Timer>
                     ))}
+                </div>
+                <div>
+                    <button onClick={addNewTimer} className="bg-red-950 text-white p-2 border-black border-2 rounded-full">
+                        +
+                    </button>
                 </div>
             </div>
         )
