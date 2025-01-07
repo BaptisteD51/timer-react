@@ -10,7 +10,9 @@ function Timer({ duration, current, id, isRunning }) {
         let regex = /^\d+$/g
         if (newDuration.match(regex) && parseInt(newDuration) > 0) {
             let updatedTimers = [...timers]
-            let updatedTimerIndex = updatedTimers.findIndex((timer) => timer.id == id)
+            let updatedTimerIndex = updatedTimers.findIndex(
+                (timer) => timer.id == id
+            )
             updatedTimers[updatedTimerIndex].duration = parseInt(newDuration)
             updateTimers(updatedTimers)
         } else if (newDuration == "") {
@@ -21,9 +23,11 @@ function Timer({ duration, current, id, isRunning }) {
     }
 
     // Delete Timer
-    function deleteTimer(id){
+    function deleteTimer(id) {
         let updatedTimers = [...timers]
-        let deleteTimerIndex = updatedTimers.findIndex((timer) => timer.id == id)
+        let deleteTimerIndex = updatedTimers.findIndex(
+            (timer) => timer.id == id
+        )
         updatedTimers.splice(deleteTimerIndex, 1)
         updateTimers(updatedTimers)
     }
@@ -37,8 +41,15 @@ function Timer({ duration, current, id, isRunning }) {
     } else {
         return (
             <div className="bg-red-800 my-4 p-4 rounded-full flex justify-between">
-                <input type="number" onChange={(e) => updateTime(e)} defaultValue={duration} />
-                <button onClick={()=> deleteTimer(id)} className="bg-red-950 text-white p-2 border-black border-2 rounded-full">
+                <input
+                    type="number"
+                    onChange={(e) => updateTime(e)}
+                    defaultValue={duration}
+                />
+                <button
+                    onClick={() => deleteTimer(id)}
+                    className="bg-red-950 text-white p-2 border-black border-2 rounded-full"
+                >
                     X
                 </button>
             </div>
