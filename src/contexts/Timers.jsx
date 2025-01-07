@@ -7,7 +7,7 @@ export const TimersProvider = ({children}) => {
     let [timers, updateTimers] = useState([
         {
             running: false,
-            duration: 3,
+            duration: 5,
             current: 0,
             id: 123456,
         },
@@ -19,7 +19,7 @@ export const TimersProvider = ({children}) => {
         },
         {
             running: false,
-            duration: 3,
+            duration: 10,
             current: 0,
             id: 457963,
         },
