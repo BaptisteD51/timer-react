@@ -29,12 +29,12 @@ function Track() {
             updatedTimers[runningTimerIndex].current >=
             updatedTimers[runningTimerIndex].duration
           ) {
-            //if it's the last timer
+            //if there is a timer after 
             if (runningTimerIndex < updatedTimers.length - 1) {
               updatedTimers[runningTimerIndex].running = false
               updatedTimers[runningTimerIndex + 1].running = true
             } 
-            // if their is a timer after
+            // if it's the last timer
             else {
               updatedTimers = resetTimers(updatedTimers)
               updateIsRunning(false)
@@ -56,14 +56,20 @@ function Track() {
   }, [timers, isRunning, updateTimers, pause])
 
   // Reset all timers and return timers
-  function resetTimers() {
+      // Reset all timers and return timers
+      function resetTimers(timers) {
+        timers = timers.map((timer) => {
+            timer.current = 0
+            timer.running = false
+            return timer
+        })
+        return timers
+      }
+
+
+  function resetAll() {
     //Reset all timers to their starting values
-    let updatedTimers = [...timers]
-    updatedTimers = updatedTimers.map((timer) => {
-      timer.current = 0
-      timer.running = false
-      return timer
-    })
+    let updatedTimers = resetTimers([...timers])
     updateTimers(updatedTimers)
     // Reset the running and pause state
     updatePause(false)
@@ -105,7 +111,7 @@ function Track() {
             <FaPause />
           </button>
         )}
-        <button onClick={resetTimers} className="flex bg-white text-red-950 p-2 border-black border-2 rounded-full">
+        <button onClick={resetAll} className="flex bg-white text-red-950 p-2 border-black border-2 rounded-full">
           Reset
           <RxReset size={20} />
         </button>
