@@ -6,11 +6,8 @@ import { RxReset } from "react-icons/rx"
 import bipmp3 from "../assets/audio/long_bip.mp3"
 import sirenmp3 from "../assets/audio/siren.mp3"
 
-function Track() {
+function Track({isRunning, updateIsRunning}) {
     let { timers, updateTimers } = useContext(Timers)
-
-    // Switch between running and edit mode
-    let [isRunning, updateIsRunning] = useState(false)
 
     // Pause the timer
     let [pause, updatePause] = useState(false)
@@ -48,7 +45,7 @@ function Track() {
                         }
                     }
                 }
-                // launch the cont down
+                // launch the count down
                 else {
                     updatedTimers[0].running = true
                     updatedTimers[0].current += 1
@@ -62,7 +59,6 @@ function Track() {
         }
     }, [timers, isRunning, updateTimers, pause])
 
-    // Reset all timers and return timers
     // Reset all timers and return timers
     function resetTimers(timers) {
         timers = timers.map((timer) => {
@@ -80,20 +76,6 @@ function Track() {
         // Reset the running and pause state
         updatePause(false)
         updateIsRunning(false)
-    }
-
-    // Adds another timer
-    function addNewTimer() {
-        let newId = parseInt(Math.random() * 10 ** 6)
-        let newTimer = {
-            running: false,
-            duration: 5,
-            current: 0,
-            id: newId,
-        }
-        let updatedTimers = [...timers]
-        updatedTimers.push(newTimer)
-        updateTimers(updatedTimers)
     }
 
     //Display when the timer is launched
@@ -135,40 +117,6 @@ function Track() {
                             isRunning={isRunning}
                         ></Timer>
                     ))}
-                </div>
-            </div>
-        )
-    }
-    // Display to modify the timer
-    else {
-        return (
-            <div className="max-w-md">
-                <div>
-                    <button
-                        onClick={() => updateIsRunning(true)}
-                        className="bg-white text-red-950 p-2 border-black border-2 rounded-full"
-                    >
-                        Start
-                    </button>
-                </div>
-                <div>
-                    {timers.map((timer) => (
-                        <Timer
-                            key={timer.id}
-                            duration={timer.duration}
-                            current={timer.current}
-                            id={timer.id}
-                            isRunning={isRunning}
-                        ></Timer>
-                    ))}
-                </div>
-                <div>
-                    <button
-                        onClick={addNewTimer}
-                        className="bg-red-950 text-white p-2 border-black border-2 rounded-full"
-                    >
-                        +
-                    </button>
                 </div>
             </div>
         )
