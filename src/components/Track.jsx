@@ -15,7 +15,8 @@ function Track({isRunning, updateIsRunning}) {
     // The sounds of the timer
     let bip = new Audio(bipmp3)
     let siren = new Audio(sirenmp3)
-    // An interval fire each second
+
+    // An interval fire every tenth of a sec
     useEffect(() => {
         let countDown = setInterval(() => {
             if (isRunning && !pause) {
@@ -52,7 +53,7 @@ function Track({isRunning, updateIsRunning}) {
                 }
                 updateTimers(updatedTimers)
             }
-        }, 1000)
+        }, 100)
 
         return () => {
             clearInterval(countDown)
@@ -79,48 +80,48 @@ function Track({isRunning, updateIsRunning}) {
     }
 
     //Display when the timer is launched
-    if (isRunning) {
-        return (
-            <div className="max-w-md">
-                {pause ? (
-                    <button
-                        onClick={() => {
-                            updatePause(false)
-                        }}
-                        className="bg-white text-red-950 p-2 border-black border-2 rounded-full"
-                    >
-                        <FaPlay />
-                    </button>
-                ) : (
-                    <button
-                        onClick={() => updatePause(true)}
-                        className="bg-white text-red-950 p-2 border-black border-2 rounded-full"
-                    >
-                        <FaPause />
-                    </button>
-                )}
+    
+    return (
+        <div className="max-w-md">
+            {pause ? (
                 <button
-                    onClick={resetAll}
-                    className="flex bg-white text-red-950 p-2 border-black border-2 rounded-full"
+                    onClick={() => {
+                        updatePause(false)
+                    }}
+                    className="bg-white text-red-950 p-2 border-black border-2 rounded-full"
                 >
-                    Reset
-                    <RxReset size={20} />
+                    <FaPlay />
                 </button>
+            ) : (
+                <button
+                    onClick={() => updatePause(true)}
+                    className="bg-white text-red-950 p-2 border-black border-2 rounded-full"
+                >
+                    <FaPause />
+                </button>
+            )}
+            <button
+                onClick={resetAll}
+                className="flex bg-white text-red-950 p-2 border-black border-2 rounded-full"
+            >
+                Reset
+                <RxReset size={20} />
+            </button>
 
-                <div>
-                    {timers.map((timer) => (
-                        <Timer
-                            key={timer.id}
-                            duration={timer.duration}
-                            current={timer.current}
-                            id={timer.id}
-                            isRunning={isRunning}
-                        ></Timer>
-                    ))}
-                </div>
+            <div>
+                {timers.map((timer) => (
+                    <Timer
+                        key={timer.id}
+                        duration={timer.duration}
+                        current={timer.current}
+                        id={timer.id}
+                        isRunning={isRunning}
+                    ></Timer>
+                ))}
             </div>
-        )
-    }
+        </div>
+    )
+    
 }
 
 export default Track

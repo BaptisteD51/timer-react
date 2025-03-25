@@ -18,7 +18,7 @@ function App() {
                         <Timer />
                     </Track>
                 ) : (
-                    <Edit isRunning={isRunning} updateIsRunning={updateIsRunning}></Edit>
+                    <Edit isRunning={isRunning} updateIsRunning={updateIsRunning} />
                 )
             }
             

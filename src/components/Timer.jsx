@@ -13,12 +13,12 @@ function Timer({ duration, current, id, isRunning }) {
     if (newDuration.match(regex) && parseInt(newDuration) > 0) {
       let updatedTimers = [...timers]
       let updatedTimerIndex = updatedTimers.findIndex((timer) => timer.id == id)
-      updatedTimers[updatedTimerIndex].duration = parseInt(newDuration)
+      updatedTimers[updatedTimerIndex].duration = parseInt(newDuration) * 10
       updateTimers(updatedTimers)
     } else if (newDuration == "") {
       // Do nothing
     } else {
-      e.target.value = duration
+      e.target.value = duration / 10
     }
   }
 
@@ -69,7 +69,7 @@ function Timer({ duration, current, id, isRunning }) {
         <input
           type="number"
           onChange={(e) => updateTime(e)}
-          defaultValue={duration}
+          defaultValue={ duration / 10 }
         />
         <button
           onClick={() => deleteTimer(id)}

@@ -11,7 +11,7 @@ function Edit({isRunning, updateIsRunning}){
         let newId = parseInt(Math.random() * 10 ** 6)
         let newTimer = {
             running: false,
-            duration: 5,
+            duration: 50,
             current: 0,
             id: newId,
         }
