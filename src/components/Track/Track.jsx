@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react"
-import Timer from "./Timer"
-import { Timers } from "../contexts/Timers"
+import { Timers } from "../../contexts/Timers"
 import { FaPlay, FaPause } from "react-icons/fa"
 import { RxReset } from "react-icons/rx"
-import bipmp3 from "../assets/audio/long_bip.mp3"
-import sirenmp3 from "../assets/audio/siren.mp3"
+import bipmp3 from "../../assets/audio/long_bip.mp3"
+import sirenmp3 from "../../assets/audio/siren.mp3"
+import Counter from "../Track/Counter"
 
 function Track({isRunning, updateIsRunning}) {
     let { timers, updateTimers } = useContext(Timers)
@@ -110,13 +110,11 @@ function Track({isRunning, updateIsRunning}) {
 
             <div>
                 {timers.map((timer) => (
-                    <Timer
+                    <Counter
                         key={timer.id}
                         duration={timer.duration}
                         current={timer.current}
-                        id={timer.id}
-                        isRunning={isRunning}
-                    ></Timer>
+                    ></Counter>
                 ))}
             </div>
         </div>

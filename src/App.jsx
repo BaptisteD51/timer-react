@@ -1,7 +1,7 @@
 import { useState } from "react"
-import Timer from "./components/Timer"
-import Track from "./components/Track"
-import Edit from "./components/Edit"
+import Timer from "./components/Edit/Timer"
+import Track from "./components/Track/Track"
+import Edit from "./components/Edit/Edit"
 import { TimersProvider } from "./contexts/Timers"
 
 function App() {

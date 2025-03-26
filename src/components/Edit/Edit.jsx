@@ -1,9 +1,9 @@
 import { useContext } from "react"
-import { Timers } from "../contexts/Timers"
+import { Timers } from "../../contexts/Timers"
 import Timer from "./Timer"
 
 
-function Edit({isRunning, updateIsRunning}){
+function Edit({ updateIsRunning }){
     let { timers, updateTimers } = useContext(Timers)
     
     // Adds another timer
@@ -36,9 +36,7 @@ function Edit({isRunning, updateIsRunning}){
                         <Timer
                             key={timer.id}
                             duration={timer.duration}
-                            current={timer.current}
                             id={timer.id}
-                            isRunning={isRunning}
                         ></Timer>
                     ))}
                 </div>
