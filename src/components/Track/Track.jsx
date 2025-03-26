@@ -9,6 +9,9 @@ import Counter from "../Track/Counter"
 function Track({isRunning, updateIsRunning}) {
     let { timers, updateTimers } = useContext(Timers)
 
+    //Get the active profile
+    let profile = timers.find(timer => timer.selected)
+    
     // Pause the timer
     let [pause, updatePause] = useState(false)
 
@@ -20,38 +23,43 @@ function Track({isRunning, updateIsRunning}) {
     useEffect(() => {
         let countDown = setInterval(() => {
             if (isRunning && !pause) {
-                let updatedTimers = [...timers]
-                let runningTimerIndex = updatedTimers.findIndex(
+                let prTimers = [...profile.timers]
+                let runningTimerIndex = prTimers.findIndex(
                     (timer) => timer.running
                 )
                 // if the countdown is already started
                 if (runningTimerIndex != -1) {
-                    updatedTimers[runningTimerIndex].current++
+                    prTimers[runningTimerIndex].current++
                     // Go to the next timer if end of the duration
                     if (
-                        updatedTimers[runningTimerIndex].current >=
-                        updatedTimers[runningTimerIndex].duration
+                        prTimers[runningTimerIndex].current >=
+                        prTimers[runningTimerIndex].duration
                     ) {
                         //if there is a timer after
-                        if (runningTimerIndex < updatedTimers.length - 1) {
+                        if (runningTimerIndex < prTimers.length - 1) {
                             bip.play()
-                            updatedTimers[runningTimerIndex].running = false
-                            updatedTimers[runningTimerIndex + 1].running = true
+                            prTimers[runningTimerIndex].running = false
+                            prTimers[runningTimerIndex + 1].running = true
                         }
                         // if it's the last timer
                         else {
                             siren.play()
-                            updatedTimers = resetTimers(updatedTimers)
+                            prTimers = resetTimers(prTimers)
                             updateIsRunning(false)
                         }
                     }
                 }
                 // launch the count down
                 else {
-                    updatedTimers[0].running = true
-                    updatedTimers[0].current += 1
+                    prTimers[0].running = true
+                    prTimers[0].current += 1
                 }
-                updateTimers(updatedTimers)
+
+                // Update the profile, then all of the profiles 
+                profile.timers = prTimers
+                let updatedProfiles = [...timers.filter(profile => !profile.selected)]
+                updatedProfiles.push(profile)
+                updateTimers(updatedProfiles)
             }
         }, 100)
 
@@ -71,9 +79,13 @@ function Track({isRunning, updateIsRunning}) {
     }
 
     function resetAll() {
+        //Get unselected profiles
+        let profiles = [...timers.filter(pr => pr.id != profile.id)]
         //Reset all timers to their starting values
-        let updatedTimers = resetTimers([...timers])
-        updateTimers(updatedTimers)
+        let updatedTimers = resetTimers([...profile.timers])
+        profile.timers = updatedTimers
+        profiles.push(profile)
+        updateTimers(profiles)
         // Reset the running and pause state
         updatePause(false)
         updateIsRunning(false)
@@ -82,7 +94,7 @@ function Track({isRunning, updateIsRunning}) {
     //Display when the timer is launched
     
     return (
-        <div className="max-w-md">
+        <div className="max-w-lg">
             {pause ? (
                 <button
                     onClick={() => {
@@ -109,7 +121,7 @@ function Track({isRunning, updateIsRunning}) {
             </button>
 
             <div>
-                {timers.map((timer) => (
+                {profile.timers.map((timer) => (
                     <Counter
                         key={timer.id}
                         duration={timer.duration}

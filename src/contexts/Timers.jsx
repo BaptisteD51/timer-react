@@ -5,23 +5,44 @@ export const Timers = createContext(null)
 export const TimersProvider = ({children}) => {
     let defaultTimers = [
         {
-            running: false,
-            duration: 50,
-            current: 0,
-            id: 123456,
+            prName : "Default",
+            id : 123456,
+            selected : true,
+            timers : [
+                {
+                    running: false,
+                    duration: 50,
+                    current: 0,
+                    id: 123456,
+                },
+                {
+                    running: false,
+                    duration: 30,
+                    current: 0,
+                    id: 123461,
+                },
+                {
+                    running: false,
+                    duration: 100,
+                    current: 0,
+                    id: 457963,
+                },
+            ]    
         },
         {
-            running: false,
-            duration: 30,
-            current: 0,
-            id: 123461,
-        },
-        {
-            running: false,
-            duration: 100,
-            current: 0,
-            id: 457963,
-        },
+            prName : "10 sec",
+            id : 654321,
+            selected : false,
+            timers : [
+                {
+                    running: false,
+                    duration: 100,
+                    current: 0,
+                    id: 654321,
+                }
+            ]    
+        }
+        
     ]
 
     /**
