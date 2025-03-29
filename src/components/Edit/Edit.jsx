@@ -4,9 +4,9 @@ import Timer from "./Timer"
 
 
 function Edit({ updateIsRunning }){
-    let { timers, updateTimers } = useContext(Timers)
+    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
     //Get the active profile
-    let profile = timers.find(timer => timer.selected)
+    let profile = currentProfile
 
 
     // Adds another timer to current profile
@@ -20,9 +20,9 @@ function Edit({ updateIsRunning }){
         }
         profile.timers.push(newTimer)
 
-        let updatedTimers = [...timers.filter(profile => !profile.selected)]
+        let updatedTimers = [...profiles.filter(profile => !profile.selected)]
         updatedTimers.push(profile)
-        updateTimers(updatedTimers)
+        updateProfiles(updatedTimers)
     }
 
     // Display to modify the timer

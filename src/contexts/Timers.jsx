@@ -52,17 +52,31 @@ export const TimersProvider = ({children}) => {
         ? JSON.parse(localStorage.getItem("timers"))
         : defaultTimers
 
-    let [timers, updateTimers] = useState(savedTimers)
+    let [profiles, updateProfiles] = useState(savedTimers)
 
     /**
      * Save the timers in local storage when they are updated
      */
     useEffect(() => {
-        localStorage.setItem("timers", JSON.stringify(timers))
-    }, [timers])
+        localStorage.setItem("timers", JSON.stringify(profiles))
+    }, [profiles])
+
+    /**
+     * Get the current profile
+     */
+    let currentProfile = profiles.find(timer => timer.selected)
+
+    /**
+     * Update the current profile
+     */
+    function updateCurrentProfile(profile){
+        let updatedProfiles = [...profiles.filter(profile => !profile.selected)]
+        updatedProfiles.push(profile)
+        updateProfiles(updatedProfiles)
+    }
 
     return (
-        <Timers.Provider value={{timers, updateTimers}}>
+        <Timers.Provider value={{profiles, updateProfiles, currentProfile, updateCurrentProfile}}>
             {children}
         </Timers.Provider>
     )

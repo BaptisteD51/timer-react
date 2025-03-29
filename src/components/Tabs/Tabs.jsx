@@ -2,28 +2,28 @@ import { useContext } from "react"
 import { Timers } from "../../contexts/Timers"
 
 function Tabs() {
-    let { timers, updateTimers } = useContext(Timers)
+    let { profiles, updateProfiles } = useContext(Timers)
 
     function SelectProfile(profile) {
         // Get all profiles except the one to be selected
-        let profiles = [...timers.filter((pr) => pr.id != profile.id)]
+        let updatedProfiles = [...profiles.filter((pr) => pr.id != profile.id)]
 
         // Set all profiles as unselected
-        profiles = profiles.map((pr) => {
+        updatedProfiles = updatedProfiles.map((pr) => {
             pr.selected = false
             return pr
         })
 
         // Set the clicked profile as selected and update profiles
         profile.selected = true
-        profiles.push(profile)
-        updateTimers(profiles)
+        updatedProfiles.push(profile)
+        updateProfiles(updatedProfiles)
     }
 
     function AddProfile(){
-        let profiles = [...timers]
+        let updatedProfiles = [...profiles]
 
-        profiles = profiles.map((pr) => {
+        updatedProfiles = updatedProfiles.map((pr) => {
             pr.selected = false
             return pr
         })
@@ -31,7 +31,7 @@ function Tabs() {
         let newProfileId = parseInt(Math.random() * 10 ** 6)
         let newIntervalId = parseInt(Math.random() * 10 ** 6)
 
-        profiles.push({
+        updatedProfiles.push({
             prName : "New Profile",
             id : newProfileId,
             selected : true,
@@ -45,13 +45,13 @@ function Tabs() {
             ]    
         })
 
-        updateTimers(profiles)
+        updateProfiles(updatedProfiles)
     }
 
     return (
         <aside>
             <ul>
-                {timers.map((profile) => (
+                {profiles.map((profile) => (
                     <li
                         key={profile.id}
                         className="bg-orange-300 rounded-full p-2"

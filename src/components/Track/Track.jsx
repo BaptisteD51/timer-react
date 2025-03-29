@@ -7,10 +7,10 @@ import sirenmp3 from "../../assets/audio/siren.mp3"
 import Counter from "../Track/Counter"
 
 function Track({isRunning, updateIsRunning}) {
-    let { timers, updateTimers } = useContext(Timers)
+    let { profiles, updateProfiles } = useContext(Timers)
 
     //Get the active profile
-    let profile = timers.find(timer => timer.selected)
+    let profile = profiles.find(timer => timer.selected)
     
     // Pause the timer
     let [pause, updatePause] = useState(false)
@@ -57,16 +57,16 @@ function Track({isRunning, updateIsRunning}) {
 
                 // Update the profile, then all of the profiles 
                 profile.timers = prTimers
-                let updatedProfiles = [...timers.filter(profile => !profile.selected)]
+                let updatedProfiles = [...profiles.filter(profile => !profile.selected)]
                 updatedProfiles.push(profile)
-                updateTimers(updatedProfiles)
+                updateProfiles(updatedProfiles)
             }
         }, 100)
 
         return () => {
             clearInterval(countDown)
         }
-    }, [timers, isRunning, updateTimers, pause])
+    }, [profiles, isRunning, updateProfiles, pause])
 
     // Reset all timers and return timers
     function resetTimers(timers) {
@@ -80,12 +80,12 @@ function Track({isRunning, updateIsRunning}) {
 
     function resetAll() {
         //Get unselected profiles
-        let profiles = [...timers.filter(pr => pr.id != profile.id)]
+        let updatedProfiles = [...profiles.filter(pr => pr.id != profile.id)]
         //Reset all timers to their starting values
         let updatedTimers = resetTimers([...profile.timers])
         profile.timers = updatedTimers
-        profiles.push(profile)
-        updateTimers(profiles)
+        updatedProfiles.push(profile)
+        updateProfiles(updatedProfiles)
         // Reset the running and pause state
         updatePause(false)
         updateIsRunning(false)
