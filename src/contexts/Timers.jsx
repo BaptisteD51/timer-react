@@ -70,10 +70,23 @@ export const TimersProvider = ({children}) => {
      * Update the current profile
      */
     function updateCurrentProfile(profile){
-        let updatedProfiles = [...profiles.filter(profile => !profile.selected)]
-        updatedProfiles.push(profile)
+        //Get all profiles
+        let updatedProfiles = [...profiles]
+        //Get the position of the profile to be updated
+        let prPos = profiles.findIndex(pr => pr.id == profile.id )
+
+        //In the case of an existing profile, replace the profile with the new value
+        if(prPos >= 0){
+            updatedProfiles[prPos] = profile
+        }
+        //If the profile is new, append at the end of the list
+        else{
+            updatedProfiles.push(profile)
+        }
+
         updateProfiles(updatedProfiles)
     }
+
 
     return (
         <Timers.Provider value={{profiles, updateProfiles, currentProfile, updateCurrentProfile}}>

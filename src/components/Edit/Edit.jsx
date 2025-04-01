@@ -1,13 +1,11 @@
 import { useContext } from "react"
 import { Timers } from "../../contexts/Timers"
 import Timer from "./Timer"
-
+import { MdDelete } from "react-icons/md";
 
 function Edit({ updateIsRunning }){
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
-    //Get the active profile
-    let profile = currentProfile
-
+    console.log(currentProfile.prName)
 
     // Adds another timer to current profile
     function addNewInterval() {
@@ -18,11 +16,18 @@ function Edit({ updateIsRunning }){
             current: 0,
             id: newId,
         }
-        profile.timers.push(newTimer)
+        currentProfile.timers.push(newTimer)
 
         let updatedTimers = [...profiles.filter(profile => !profile.selected)]
-        updatedTimers.push(profile)
+        updatedTimers.push(currentProfile)
         updateProfiles(updatedTimers)
+    }
+
+    // Delete the current profile
+    function deleteProfile(){
+        let updatedProfiles = [...profiles.filter(profile => !profile.selected)]
+        updatedProfiles[0].selected = true
+        updateProfiles(updatedProfiles)
     }
 
     // Display to modify the timer
@@ -37,7 +42,21 @@ function Edit({ updateIsRunning }){
                     </button>
                 </div>
                 <div>
-                    {profile.timers.map((timer) => (
+                    <input 
+                        type="text"
+                        value={currentProfile.prName}
+                        onChange={(e)=>{
+                            currentProfile.prName = e.target.value
+                            updateCurrentProfile(currentProfile)
+                        }}
+                    />
+
+                    <button>
+                        <MdDelete onClick={deleteProfile} />
+                    </button>
+                </div>
+                <div>
+                    {currentProfile.timers.map((timer) => (
                         <Timer
                             key={timer.id}
                             duration={timer.duration}

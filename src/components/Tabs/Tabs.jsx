@@ -2,11 +2,14 @@ import { useContext } from "react"
 import { Timers } from "../../contexts/Timers"
 
 function Tabs() {
-    let { profiles, updateProfiles } = useContext(Timers)
+    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
     function SelectProfile(profile) {
-        // Get all profiles except the one to be selected
-        let updatedProfiles = [...profiles.filter((pr) => pr.id != profile.id)]
+        // Get all profiles
+        let updatedProfiles = [...profiles]
+
+        //The position of the profile in the list
+        let prPos = profiles.findIndex(pr => pr.id == profile.id )
 
         // Set all profiles as unselected
         updatedProfiles = updatedProfiles.map((pr) => {
@@ -14,9 +17,13 @@ function Tabs() {
             return pr
         })
 
-        // Set the clicked profile as selected and update profiles
+        // Set the clicked profile as selected
         profile.selected = true
-        updatedProfiles.push(profile)
+
+        // Replace the profile with the selected profile
+        updatedProfiles[prPos] = profile
+
+        //updatedProfiles.push(profile)
         updateProfiles(updatedProfiles)
     }
 
