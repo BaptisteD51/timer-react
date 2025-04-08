@@ -74,6 +74,7 @@ export const TimersProvider = ({children}) => {
         let updatedProfiles = [...profiles]
         //Get the position of the profile to be updated
         let prPos = profiles.findIndex(pr => pr.id == profile.id )
+        console.log("prPos",prPos)
 
         //In the case of an existing profile, replace the profile with the new value
         if(prPos >= 0){
@@ -81,6 +82,7 @@ export const TimersProvider = ({children}) => {
         }
         //If the profile is new, append at the end of the list
         else{
+            console.log("Entrée dans else")
             updatedProfiles.push(profile)
         }
 

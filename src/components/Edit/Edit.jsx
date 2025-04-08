@@ -5,7 +5,6 @@ import { MdDelete } from "react-icons/md";
 
 function Edit({ updateIsRunning }){
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
-    console.log(currentProfile.prName)
 
     // Adds another timer to current profile
     function addNewInterval() {
@@ -32,7 +31,7 @@ function Edit({ updateIsRunning }){
 
     // Display to modify the timer
     return (
-        <div className="max-w-lg">
+        <div className="bg-orange-300">
                 <div>
                     <button
                         onClick={() => updateIsRunning(true)}

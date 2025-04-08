@@ -7,7 +7,7 @@ import sirenmp3 from "../../assets/audio/siren.mp3"
 import Counter from "../Track/Counter"
 
 function Track({isRunning, updateIsRunning}) {
-    let { profiles, updateProfiles } = useContext(Timers)
+    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
     //Get the active profile
     let profile = profiles.find(timer => timer.selected)
@@ -23,7 +23,7 @@ function Track({isRunning, updateIsRunning}) {
     useEffect(() => {
         let countDown = setInterval(() => {
             if (isRunning && !pause) {
-                let prTimers = [...profile.timers]
+                let prTimers = [...currentProfile.timers]
                 let runningTimerIndex = prTimers.findIndex(
                     (timer) => timer.running
                 )
@@ -55,11 +55,9 @@ function Track({isRunning, updateIsRunning}) {
                     prTimers[0].current += 1
                 }
 
-                // Update the profile, then all of the profiles 
-                profile.timers = prTimers
-                let updatedProfiles = [...profiles.filter(profile => !profile.selected)]
-                updatedProfiles.push(profile)
-                updateProfiles(updatedProfiles)
+                // Update the current profile timers
+                currentProfile.timers = prTimers
+                updateCurrentProfile(currentProfile)
             }
         }, 100)
 
@@ -79,13 +77,19 @@ function Track({isRunning, updateIsRunning}) {
     }
 
     function resetAll() {
-        //Get unselected profiles
-        let updatedProfiles = [...profiles.filter(pr => pr.id != profile.id)]
-        //Reset all timers to their starting values
-        let updatedTimers = resetTimers([...profile.timers])
-        profile.timers = updatedTimers
-        updatedProfiles.push(profile)
-        updateProfiles(updatedProfiles)
+        // //Get unselected profiles
+        // let updatedProfiles = [...profiles.filter(pr => pr.id != profile.id)]
+        // //Reset all timers to their starting values
+        // let updatedTimers = resetTimers([...profile.timers])
+        // profile.timers = updatedTimers
+        // updatedProfiles.push(profile)
+        // updateProfiles(updatedProfiles)
+        
+        
+        let resetedTimers = resetTimers([...currentProfile.timers])
+        currentProfile.timers = resetedTimers
+        updateCurrentProfile(currentProfile)
+
         // Reset the running and pause state
         updatePause(false)
         updateIsRunning(false)
@@ -94,7 +98,7 @@ function Track({isRunning, updateIsRunning}) {
     //Display when the timer is launched
     
     return (
-        <div className="max-w-lg">
+        <div className="max-w-lg bg-orange-300">
             {pause ? (
                 <button
                     onClick={() => {

@@ -2,14 +2,15 @@ import { useContext } from "react"
 import { Timers } from "../../contexts/Timers"
 
 function Tabs() {
-    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
+    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } =
+        useContext(Timers)
 
     function SelectProfile(profile) {
         // Get all profiles
         let updatedProfiles = [...profiles]
 
         //The position of the profile in the list
-        let prPos = profiles.findIndex(pr => pr.id == profile.id )
+        let prPos = profiles.findIndex((pr) => pr.id == profile.id)
 
         // Set all profiles as unselected
         updatedProfiles = updatedProfiles.map((pr) => {
@@ -27,7 +28,7 @@ function Tabs() {
         updateProfiles(updatedProfiles)
     }
 
-    function AddProfile(){
+    function AddProfile() {
         let updatedProfiles = [...profiles]
 
         updatedProfiles = updatedProfiles.map((pr) => {
@@ -39,17 +40,17 @@ function Tabs() {
         let newIntervalId = parseInt(Math.random() * 10 ** 6)
 
         updatedProfiles.push({
-            prName : "New Profile",
-            id : newProfileId,
-            selected : true,
-            timers : [
+            prName: "New Profile",
+            id: newProfileId,
+            selected: true,
+            timers: [
                 {
                     running: false,
                     duration: 100,
                     current: 0,
                     id: newIntervalId,
-                }
-            ]    
+                },
+            ],
         })
 
         updateProfiles(updatedProfiles)
@@ -57,11 +58,13 @@ function Tabs() {
 
     return (
         <aside>
-            <ul>
+            <ul className="bg-orange-50">
                 {profiles.map((profile) => (
                     <li
                         key={profile.id}
-                        className="bg-orange-300 rounded-full p-2"
+                        className={`${
+                            profile.selected ? "bg-orange-300" : ""
+                        } p-4 rounded-l-xl`}
                         onClick={() => SelectProfile(profile)}
                     >
                         <button>{profile.prName}</button>
@@ -71,7 +74,10 @@ function Tabs() {
             <button
                 className="bg-orange-700 text-white p-2 border-black border-2 rounded-full"
                 onClick={AddProfile}
-            > + </button>
+            >
+                {" "}
+                +{" "}
+            </button>
         </aside>
     )
 }
