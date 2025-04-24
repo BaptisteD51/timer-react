@@ -8,6 +8,7 @@ function Counter({ current, duration }) {
             rounded-full
             justify-between
             text-center
+            w-48
             ${current == duration || current == 0 ? "brightness-[60%]" : "brightness-[140%]"}
             `}
         >

@@ -6,12 +6,13 @@ import bipmp3 from "../../assets/audio/long_bip.mp3"
 import sirenmp3 from "../../assets/audio/siren.mp3"
 import Counter from "../Track/Counter"
 
-function Track({isRunning, updateIsRunning}) {
-    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
+function Track({ isRunning, updateIsRunning }) {
+    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } =
+        useContext(Timers)
 
     //Get the active profile
-    let profile = profiles.find(timer => timer.selected)
-    
+    let profile = profiles.find((timer) => timer.selected)
+
     // Pause the timer
     let [pause, updatePause] = useState(false)
 
@@ -84,8 +85,7 @@ function Track({isRunning, updateIsRunning}) {
         // profile.timers = updatedTimers
         // updatedProfiles.push(profile)
         // updateProfiles(updatedProfiles)
-        
-        
+
         let resetedTimers = resetTimers([...currentProfile.timers])
         currentProfile.timers = resetedTimers
         updateCurrentProfile(currentProfile)
@@ -96,33 +96,35 @@ function Track({isRunning, updateIsRunning}) {
     }
 
     //Display when the timer is launched
-    
+
     return (
-        <div className="max-w-lg bg-orange-300">
-            {pause ? (
+        <>
+            <div className="flex gap-3">
+                {pause ? (
+                    <button
+                        onClick={() => {
+                            updatePause(false)
+                        }}
+                        className="bg-orange-600 text-orange-50 p-2 border-black border-2 size-10 rounded-full flex justify-center items-center"
+                    >
+                        <FaPlay />
+                    </button>
+                ) : (
+                    <button
+                        onClick={() => updatePause(true)}
+                        className="bg-orange-600 text-orange-50 p-2 border-black border-2 size-10 rounded-full flex justify-center items-center"
+                    >
+                        <FaPause />
+                    </button>
+                )}
                 <button
-                    onClick={() => {
-                        updatePause(false)
-                    }}
-                    className="bg-white text-red-950 p-2 border-black border-2 rounded-full"
+                    onClick={resetAll}
+                    className="flex bg-white text-red-950 p-2 border-black border-2 rounded-full"
                 >
-                    <FaPlay />
+                    Reset
+                    <RxReset size={20} />
                 </button>
-            ) : (
-                <button
-                    onClick={() => updatePause(true)}
-                    className="bg-white text-red-950 p-2 border-black border-2 rounded-full"
-                >
-                    <FaPause />
-                </button>
-            )}
-            <button
-                onClick={resetAll}
-                className="flex bg-white text-red-950 p-2 border-black border-2 rounded-full"
-            >
-                Reset
-                <RxReset size={20} />
-            </button>
+            </div>
 
             <div>
                 {profile.timers.map((timer) => (
@@ -133,9 +135,8 @@ function Track({isRunning, updateIsRunning}) {
                     ></Counter>
                 ))}
             </div>
-        </div>
+        </>
     )
-    
 }
 
 export default Track

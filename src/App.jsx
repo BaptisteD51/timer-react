@@ -11,23 +11,27 @@ function App() {
 
     return (
         <TimersProvider>
-            <main className="mx-auto max-w-4xl">
-                <h1 className="text-2xl font-bold text-center">Sport timer</h1>
-                <div className="flex justify-center">
+            <main className="mx-auto w-4xl max-w-full flex flex-col items-center">
+                <h1 className="text-3xl font-bold text-center my-6">Sport timer</h1>
+                <div className="flex justify-center rounded-xl bg-orange-50 overflow-hidden shadow-xl">
                     <Tabs/>
-                    {isRunning ? (
-                        <Track
-                            isRunning={isRunning}
-                            updateIsRunning={updateIsRunning}
-                        >
-                            <Timer />
-                        </Track>
-                    ) : (
-                        <Edit
-                            isRunning={isRunning}
-                            updateIsRunning={updateIsRunning}
-                        />
-                    )}
+
+                    <div className="max-w-lg bg-orange-300 p-4">
+                        
+                        {isRunning ? (
+                            <Track
+                                isRunning={isRunning}
+                                updateIsRunning={updateIsRunning}
+                            >
+                                <Timer />
+                            </Track>
+                        ) : (
+                            <Edit
+                                isRunning={isRunning}
+                                updateIsRunning={updateIsRunning}
+                            />
+                        )}
+                    </div>
                 </div>
             </main>
         </TimersProvider>

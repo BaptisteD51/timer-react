@@ -1,5 +1,6 @@
 import { useContext } from "react"
 import { Timers } from "../../contexts/Timers"
+import { FaPlus } from "react-icons/fa";
 
 function Tabs() {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } =
@@ -71,13 +72,14 @@ function Tabs() {
                     </li>
                 ))}
             </ul>
-            <button
-                className="bg-orange-700 text-white p-2 border-black border-2 rounded-full"
-                onClick={AddProfile}
-            >
-                {" "}
-                +{" "}
-            </button>
+            <div className="flex justify-center my-5">
+                <button
+                    className="text-orange-700 text-l border-2 border-orange-700 p-1 rounded-md"
+                    onClick={AddProfile}
+                >
+                    <FaPlus/>
+                </button>
+            </div>
         </aside>
     )
 }

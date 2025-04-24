@@ -66,7 +66,7 @@ function Timer({ duration, id }) {
     }
 
     return (
-        <div className="bg-red-800 my-4 p-4 rounded-full flex justify-between">
+        <div className="bg-red-800 my-4 p-4 rounded-full flex justify-between items-center">
             <div className="flex flex-col justify-between">
                 <button onClick={() => changeTimerPosition(id, -1)}>
                     <FaAngleUp size={25} />
@@ -82,9 +82,11 @@ function Timer({ duration, id }) {
             />
             <button
                 onClick={() => deleteTimer(id)}
-                className="bg-red-950 text-white p-2 border-black border-2 rounded-full"
+                className="bg-red-600 text-white p-2 rounded-full size-8 flex justify-center items-center"
             >
-                <FaXmark />
+                <FaXmark 
+                    className="text-xl"
+                />
             </button>
         </div>
     )

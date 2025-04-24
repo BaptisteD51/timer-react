@@ -2,6 +2,7 @@ import { useContext } from "react"
 import { Timers } from "../../contexts/Timers"
 import Timer from "./Timer"
 import { MdDelete } from "react-icons/md";
+import { FaPlay, FaPlus } from "react-icons/fa";
 
 function Edit({ updateIsRunning }){
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
@@ -31,16 +32,8 @@ function Edit({ updateIsRunning }){
 
     // Display to modify the timer
     return (
-        <div className="bg-orange-300">
-                <div>
-                    <button
-                        onClick={() => updateIsRunning(true)}
-                        className="bg-white text-red-950 p-2 border-black border-2 rounded-full"
-                    >
-                        Start
-                    </button>
-                </div>
-                <div>
+        <>
+                <div className="flex justify-center my-3">
                     <input 
                         type="text"
                         value={currentProfile.prName}
@@ -48,12 +41,27 @@ function Edit({ updateIsRunning }){
                             currentProfile.prName = e.target.value
                             updateCurrentProfile(currentProfile)
                         }}
+                        className="font-bold text-center text-2xl rounded-lg"
                     />
 
                     <button>
-                        <MdDelete onClick={deleteProfile} />
+                        <MdDelete 
+                            onClick={deleteProfile} 
+                            size={30}
+                            className="text-red-900"
+                        />
                     </button>
                 </div>
+                
+                <div className="flex justify-center">
+                    <button
+                        onClick={() => updateIsRunning(true)}
+                        className="bg-orange-600 text-orange-50 font-bold p-2 border-black border-2 rounded-full flex w-full items-center justify-center gap-1 my-6"
+                    >
+                        <FaPlay/> Start
+                    </button>
+                </div>
+                
                 <div>
                     {currentProfile.timers.map((timer) => (
                         <Timer
@@ -63,15 +71,16 @@ function Edit({ updateIsRunning }){
                         ></Timer>
                     ))}
                 </div>
-                <div>
+
+                <div className="flex justify-center items-center">
                     <button
                         onClick={addNewInterval}
-                        className="bg-red-950 text-white p-2 border-black border-2 rounded-full"
+                        className="text-red-800 border-red-800 font-bold text-4xl flex justify-center items-center p-0"
                     >
-                        +
+                        <FaPlus/>
                     </button>
                 </div>
-            </div>
+            </>
     )
 }
 
