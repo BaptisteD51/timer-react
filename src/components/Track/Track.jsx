@@ -132,6 +132,7 @@ function Track({ isRunning, updateIsRunning }) {
                         key={timer.id}
                         duration={timer.duration}
                         current={timer.current}
+                        color={timer.color}
                     ></Counter>
                 ))}
             </div>

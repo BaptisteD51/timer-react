@@ -15,6 +15,7 @@ function Edit({ updateIsRunning }){
             duration: 50,
             current: 0,
             id: newId,
+            color:"bg-orange-400"
         }
         currentProfile.timers.push(newTimer)
 
@@ -67,6 +68,7 @@ function Edit({ updateIsRunning }){
                         <Timer
                             key={timer.id}
                             duration={timer.duration}
+                            color={timer.color}
                             id={timer.id}
                         ></Timer>
                     ))}
