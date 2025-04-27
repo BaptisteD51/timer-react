@@ -50,6 +50,7 @@ function Tabs() {
                     duration: 100,
                     current: 0,
                     id: newIntervalId,
+                    color:"bg-orange-400"
                 },
             ],
         })
