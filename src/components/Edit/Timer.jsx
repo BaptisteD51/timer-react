@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { Timers } from "../../contexts/Timers"
 import { FaAngleUp, FaAngleDown } from "react-icons/fa"
 import { FaXmark } from "react-icons/fa6"
@@ -6,8 +6,6 @@ import Palette from "./Palette.jsx"
 
 function Timer({ duration, id, color }) {
     let { profiles, updateProfiles } = useContext(Timers)
-
-    let [shwColPick, updateShwColPick] = useState(false)
 
     let profile = profiles.find((timer) => timer.selected)
 
@@ -69,7 +67,9 @@ function Timer({ duration, id, color }) {
     }
 
     return (
-        <div className={`${color} my-4 p-4 rounded-full flex justify-between items-center`}>
+        <div
+            className={`${color} my-4 p-4 rounded-full flex justify-between items-center`}
+        >
             <div className="flex flex-col justify-between">
                 <button onClick={() => changeTimerPosition(id, -1)}>
                     <FaAngleUp size={25} />
@@ -80,13 +80,7 @@ function Timer({ duration, id, color }) {
             </div>
 
             <div className="relative">
-                { shwColPick && (
-                    <Palette updateShwColPick={updateShwColPick} intervalId={id}/>
-                )}
-                <button
-                    className="bg-red-600 border-4 border-black rounded-sm size-6"
-                    onClick={() => updateShwColPick(!shwColPick)}
-                ></button>
+                <Palette intervalId={id} />
             </div>
 
             <input
