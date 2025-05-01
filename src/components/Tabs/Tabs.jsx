@@ -1,10 +1,12 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { Timers } from "../../contexts/Timers"
 import { FaPlus } from "react-icons/fa";
 
 function Tabs() {
-    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } =
-        useContext(Timers)
+    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
+
+    let [draggedPrId, updateDraggedPrId] = useState(null)
+    console.log(draggedPrId)
 
     function SelectProfile(profile) {
         // Get all profiles
@@ -58,6 +60,45 @@ function Tabs() {
         updateProfiles(updatedProfiles)
     }
 
+    /**
+     * When we start dragging a profile
+     */
+    function handleDragStart(e, id){
+        updateDraggedPrId(id)
+    }
+
+    /**
+     * Allow to drop something on the profile
+     */
+    function handleDragOver(e){
+        e.preventDefault()
+    }
+
+    /**
+     * When we drop the dragged profile over 
+     */
+    function handleDropHover(e, id){
+        e.preventDefault()
+
+        let updatedProfiles = [...profiles]
+        let draggedPrPos = updatedProfiles.findIndex(profile => profile.id == draggedPrId)
+        let dropOnPrPos = updatedProfiles.findIndex(profile => profile.id == id)
+
+        console.log("draggedPrPos", draggedPrPos)
+        console.log("dropOnPrPos", dropOnPrPos)
+
+        let draggedPr = updatedProfiles[draggedPrPos]
+        
+        //Delete the dragged profile at its former position
+        updatedProfiles.splice(draggedPrPos, 1)
+
+        //insert the dragged profile after the dropped on profile
+        updatedProfiles.splice(dropOnPrPos,0,draggedPr) 
+        
+        console.log(updatedProfiles)
+        updateProfiles(updatedProfiles)
+    }
+
     return (
         <aside>
             <ul className="bg-orange-50">
@@ -68,6 +109,10 @@ function Tabs() {
                             profile.selected ? "bg-orange-300" : ""
                         } p-4 rounded-l-xl`}
                         onClick={() => SelectProfile(profile)}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, profile.id)}
+                        onDragOver={(e)=> handleDragOver(e)}
+                        onDrop={(e) => handleDropHover(e, profile.id)}
                     >
                         <button>{profile.prName}</button>
                     </li>
