@@ -27,8 +27,13 @@ function Edit({ updateIsRunning }){
     // Delete the current profile
     function deleteProfile(){
         let updatedProfiles = [...profiles.filter(profile => !profile.selected)]
-        updatedProfiles[0].selected = true
-        updateProfiles(updatedProfiles)
+        
+        //Checks if their is a least one last profile to show 
+        if (updatedProfiles.length > 0 ){
+            updatedProfiles[0].selected = true
+            updateProfiles(updatedProfiles)
+        }
+        
     }
 
     // Display to modify the timer
