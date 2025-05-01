@@ -6,7 +6,6 @@ function Tabs() {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
     let [draggedPrId, updateDraggedPrId] = useState(null)
-    console.log(draggedPrId)
 
     function SelectProfile(profile) {
         // Get all profiles
@@ -84,9 +83,6 @@ function Tabs() {
         let draggedPrPos = updatedProfiles.findIndex(profile => profile.id == draggedPrId)
         let dropOnPrPos = updatedProfiles.findIndex(profile => profile.id == id)
 
-        console.log("draggedPrPos", draggedPrPos)
-        console.log("dropOnPrPos", dropOnPrPos)
-
         let draggedPr = updatedProfiles[draggedPrPos]
         
         //Delete the dragged profile at its former position
@@ -94,9 +90,6 @@ function Tabs() {
 
         //insert the dragged profile after the dropped on profile
         updatedProfiles.splice(dropOnPrPos,0,draggedPr) 
-        
-        console.log(updatedProfiles)
-        updateProfiles(updatedProfiles)
     }
 
     return (

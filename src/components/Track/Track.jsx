@@ -67,6 +67,37 @@ function Track({ isRunning, updateIsRunning }) {
         }
     }, [profiles, isRunning, updateProfiles, pause])
 
+    // Prevents the mobile screen from turning off
+    useEffect(()=>{
+        let wakeLock = null
+
+        async function requestWakeLock(){
+            if('wakeLock' in navigator){
+                try{
+                    wakeLock = await navigator.wakeLock.request("screen") 
+                    console.log("WakeLock is active")
+                    wakeLock.addEventListener('release', () => {
+                        //To debug if WakeLock is released for some reason
+                        console.log("WakeLock was released")
+                    })
+                }
+                catch (err) {
+                    console.log(err.name)
+                    console.log(err.message)
+                }
+            }
+        }
+
+        requestWakeLock()
+
+        return () => {
+            if (wakeLock) {
+                wakeLock.release()
+            }
+        }
+    },[])
+
+
     // Reset all timers and return timers
     function resetTimers(timers) {
         timers = timers.map((timer) => {

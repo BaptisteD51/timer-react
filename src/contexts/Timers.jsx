@@ -78,7 +78,6 @@ export const TimersProvider = ({children}) => {
         let updatedProfiles = [...profiles]
         //Get the position of the profile to be updated
         let prPos = profiles.findIndex(pr => pr.id == profile.id )
-        console.log("prPos",prPos)
 
         //In the case of an existing profile, replace the profile with the new value
         if(prPos >= 0){
