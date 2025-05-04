@@ -11,12 +11,12 @@ function App() {
 
     return (
         <TimersProvider>
-            <main className="mx-auto w-4xl max-w-full flex flex-col items-center">
+            <main className="mx-auto w-4xl max-w-full flex flex-col items-center mx-2">
                 <h1 className="text-3xl font-bold text-center my-6">Sport timer</h1>
-                <div className="flex justify-center rounded-xl bg-orange-50 overflow-hidden shadow-xl">
+                <div className="max-sm:w-full sm:w-[640px] flex justify-center rounded-xl bg-orange-50 overflow-hidden shadow-xl">
                     <Tabs/>
 
-                    <div className="max-w-lg bg-orange-300 p-4">
+                    <div className="bg-orange-300 p-4 flex-1">
                         
                         {isRunning ? (
                             <Track

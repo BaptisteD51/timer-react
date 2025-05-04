@@ -103,14 +103,18 @@ function Tabs() {
                         key={profile.id}
                         className={`${
                             profile.selected ? "bg-orange-300" : ""
-                        } p-4 rounded-l-xl`}
+                        } p-4 rounded-l-xl flex justify-center items-center`}
                         onClick={() => SelectProfile(profile)}
                         draggable
                         onDragStart={(e) => handleDragStart(e, profile.id)}
                         onDragOver={(e)=> handleDragOver(e)}
                         onDrop={(e) => handleDropHover(e, profile.id)}
                     >
-                        <button>{profile.prName}</button>
+                        <button
+                            className="[writing-mode:vertical-lr]"
+                        >
+                            {profile.prName}
+                        </button>
                     </li>
                 ))}
             </ul>

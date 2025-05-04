@@ -39,7 +39,7 @@ function Edit({ updateIsRunning }){
     // Display to modify the timer
     return (
         <>
-                <div className="flex justify-center my-3">
+                <div className="flex justify-center my-3 gap-2">
                     <input 
                         type="text"
                         value={currentProfile.prName}
@@ -47,7 +47,7 @@ function Edit({ updateIsRunning }){
                             currentProfile.prName = e.target.value
                             updateCurrentProfile(currentProfile)
                         }}
-                        className="font-bold text-center text-2xl rounded-lg"
+                        className="font-bold text-center text-2xl rounded-lg flex-1 max-w-72"
                     />
 
                     <button>
@@ -62,7 +62,7 @@ function Edit({ updateIsRunning }){
                 <div className="flex justify-center">
                     <button
                         onClick={() => updateIsRunning(true)}
-                        className="bg-orange-600 text-orange-50 font-bold p-2 border-black border-2 rounded-full flex w-full items-center justify-center gap-1 my-6"
+                        className="bg-orange-600 text-orange-50 font-bold p-2 border-black border-2 rounded-full w-full flex items-center justify-center gap-1 my-6"
                     >
                         <FaPlay/> Start
                     </button>

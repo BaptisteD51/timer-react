@@ -85,7 +85,6 @@ export const TimersProvider = ({children}) => {
         }
         //If the profile is new, append at the end of the list
         else{
-            console.log("Entrée dans else")
             updatedProfiles.push(profile)
         }
 

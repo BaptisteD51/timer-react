@@ -68,9 +68,9 @@ function Timer({ duration, id, color }) {
 
     return (
         <div
-            className={`${color} my-4 p-4 rounded-full flex justify-between items-center`}
+            className={`${color} my-4 py-4 px-6 rounded-full flex justify-between items-center gap-4`}
         >
-            <div className="flex flex-col justify-between">
+            <div className="flex flex-col justify-between justify-self-start">
                 <button onClick={() => changeTimerPosition(id, -1)}>
                     <FaAngleUp size={25} />
                 </button>
@@ -79,15 +79,19 @@ function Timer({ duration, id, color }) {
                 </button>
             </div>
 
-            <div className="relative">
-                <Palette intervalId={id} />
-            </div>
+            <div className="flex justify-center items-center gap-4">
+                <div className="relative">
+                    <Palette intervalId={id} />
+                </div>
 
-            <input
-                type="number"
-                onChange={(e) => updateTime(e)}
-                defaultValue={duration / 10}
-            />
+                <input
+                    type="number"
+                    onChange={(e) => updateTime(e)}
+                    defaultValue={duration / 10}
+                    className="max-w-24"
+                />
+            </div>
+            
 
             <button
                 onClick={() => deleteTimer(id)}
