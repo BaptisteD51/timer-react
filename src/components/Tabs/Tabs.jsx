@@ -84,12 +84,15 @@ function Tabs() {
         let dropOnPrPos = updatedProfiles.findIndex(profile => profile.id == id)
 
         let draggedPr = updatedProfiles[draggedPrPos]
-        
+
         //Delete the dragged profile at its former position
         updatedProfiles.splice(draggedPrPos, 1)
-
+        
         //insert the dragged profile after the dropped on profile
         updatedProfiles.splice(dropOnPrPos,0,draggedPr) 
+
+        //Update the state
+        updateProfiles(updatedProfiles)
     }
 
     return (
