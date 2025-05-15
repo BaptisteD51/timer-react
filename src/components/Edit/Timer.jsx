@@ -5,27 +5,26 @@ import { FaXmark } from "react-icons/fa6"
 import Palette from "./Palette.jsx"
 
 function Timer({ duration, id, color }) {
-    let { profiles, updateProfiles } = useContext(Timers)
-
-    let profile = profiles.find((timer) => timer.selected)
+    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
     // Change the duration of a timer
     function updateTime(e) {
         let newDuration = e.target.value
         let regex = /^\d+$/g
+
         if (newDuration.match(regex) && parseInt(newDuration) > 0) {
-            let updatedProfiles = [
-                ...profiles.filter((pr) => pr.id != profile.id),
-            ]
-            let updatedTimerIndex = profile.timers.findIndex(
+            let updatedTimerIndex = currentProfile.timers.findIndex(
                 (timer) => timer.id == id
             )
-            profile.timers[updatedTimerIndex].duration =
+
+            currentProfile.timers[updatedTimerIndex].duration =
                 parseInt(newDuration) * 10
-            updatedProfiles.push(profile)
-            updateProfiles(updatedProfiles)
+
+            updateCurrentProfile(currentProfile)
+
         } else if (newDuration == "") {
             // Do nothing
+
         } else {
             e.target.value = duration / 10
         }
@@ -33,37 +32,36 @@ function Timer({ duration, id, color }) {
 
     // Delete Timer
     function deleteTimer(id) {
-        let updatedProfiles = [...profiles.filter((pr) => pr.id != profile.id)]
-        let deleteTimerIndex = profile.timers.findIndex(
+        let deleteTimerIndex = currentProfile.timers.findIndex(
             (timer) => timer.id == id
         )
-        profile.timers.splice(deleteTimerIndex, 1)
-        updatedProfiles.push(profile)
-        updateProfiles(updatedProfiles)
+
+        currentProfile.timers.splice(deleteTimerIndex, 1)
+        
+        updateCurrentProfile(currentProfile)
     }
 
     //Change Timer position
     function changeTimerPosition(id, direction) {
-        let updatedProfiles = [...profiles.filter((pr) => pr.id != profile.id)]
-        let moveTimerIndex = profile.timers.findIndex((timer) => timer.id == id)
+        let moveTimerIndex = currentProfile.timers.findIndex((timer) => timer.id == id)
         let replaceTimerIndex = moveTimerIndex + direction
 
-        // Returns if at the end or at the beginning of the array
+        // Do nothing if timer at the end or at the beginning of the array
         if (
             replaceTimerIndex < 0 ||
-            replaceTimerIndex > profile.timers.length - 1
+            replaceTimerIndex > currentProfile.timers.length - 1
         ) {
             return
         }
 
         // If not, reverse positions
-        let moveTimer = profile.timers[moveTimerIndex]
-        let replaceTimer = profile.timers[replaceTimerIndex]
-        profile.timers[moveTimerIndex] = replaceTimer
-        profile.timers[replaceTimerIndex] = moveTimer
+        let moveTimer = currentProfile.timers[moveTimerIndex]
+        let replaceTimer = currentProfile.timers[replaceTimerIndex]
 
-        updatedProfiles.push(profile)
-        updateProfiles(updatedProfiles)
+        currentProfile.timers[moveTimerIndex] = replaceTimer
+        currentProfile.timers[replaceTimerIndex] = moveTimer
+
+        updateCurrentProfile(currentProfile)
     }
 
     return (

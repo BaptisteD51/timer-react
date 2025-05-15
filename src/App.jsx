@@ -11,7 +11,7 @@ function App() {
 
     return (
         <TimersProvider>
-            <main className="mx-auto w-4xl max-w-full flex flex-col items-center mx-2">
+            <main className="w-4xl max-w-full flex flex-col items-center mx-2 mb-12">
                 <h1 className="text-3xl font-bold text-center my-6">Sport timer</h1>
                 <div className="max-sm:w-full sm:w-[640px] flex justify-center rounded-xl bg-orange-50 overflow-hidden shadow-xl">
                     <Tabs/>
