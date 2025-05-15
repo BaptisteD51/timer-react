@@ -6,15 +6,12 @@ import bipmp3 from "../../assets/audio/long_bip.mp3"
 import sirenmp3 from "../../assets/audio/siren.mp3"
 import Counter from "../Track/Counter"
 
-function Track({ isRunning, updateIsRunning }) {
+function Track({ isRunning, updateIsRunning, pause, updatePause }) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } =
         useContext(Timers)
 
     //Get the active profile
     let profile = profiles.find((timer) => timer.selected)
-
-    // Pause the timer
-    let [pause, updatePause] = useState(false)
 
     // The sounds of the timer
     let bip = new Audio(bipmp3)
@@ -109,13 +106,6 @@ function Track({ isRunning, updateIsRunning }) {
     }
 
     function resetAll() {
-        // //Get unselected profiles
-        // let updatedProfiles = [...profiles.filter(pr => pr.id != profile.id)]
-        // //Reset all timers to their starting values
-        // let updatedTimers = resetTimers([...profile.timers])
-        // profile.timers = updatedTimers
-        // updatedProfiles.push(profile)
-        // updateProfiles(updatedProfiles)
 
         let resetedTimers = resetTimers([...currentProfile.timers])
         currentProfile.timers = resetedTimers

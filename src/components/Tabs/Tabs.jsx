@@ -2,7 +2,7 @@ import { useContext, useState } from "react"
 import { Timers } from "../../contexts/Timers"
 import { FaPlus } from "react-icons/fa";
 
-function Tabs() {
+function Tabs({isRunning,updateIsRunning,pause,updatePause}) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
     let [draggedPrId, updateDraggedPrId] = useState(null)
@@ -25,6 +25,18 @@ function Tabs() {
 
         // Replace the profile with the selected profile
         updatedProfiles[prPos] = profile
+
+        // If timer is running, reset the running and pause state, and set countdowns to 0
+        if(isRunning){
+            updatePause(false)
+            updateIsRunning(false)
+
+            updatedProfiles.forEach(profile => {
+                profile.timers.forEach(timer =>{
+                    timer.current = 0
+                })
+            })
+        }
 
         //updatedProfiles.push(profile)
         updateProfiles(updatedProfiles)
