@@ -120,7 +120,7 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
 
     return (
         <>
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center">
                 {pause ? (
                     <button
                         onClick={() => {

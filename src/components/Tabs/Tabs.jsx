@@ -34,6 +34,7 @@ function Tabs({isRunning,updateIsRunning,pause,updatePause}) {
             updatedProfiles.forEach(profile => {
                 profile.timers.forEach(timer =>{
                     timer.current = 0
+                    timer.running = false
                 })
             })
         }
