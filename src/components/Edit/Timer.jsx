@@ -64,6 +64,14 @@ function Timer({ duration, id, color }) {
         updateCurrentProfile(currentProfile)
     }
 
+    // Close the touchpad on smartphone when clicking "Go to"
+    function onKeyDownHandler(e){
+        if (e.key == 'Enter'){
+            e.preventDefault()
+            e.target.blur()
+        }
+    }
+
     return (
         <div
             className={`${color} my-4 py-4 px-6 rounded-full flex justify-between items-center gap-4`}
@@ -84,7 +92,9 @@ function Timer({ duration, id, color }) {
 
                 <input
                     type="number"
+                    inputMode="numeric"
                     onChange={(e) => updateTime(e)}
+                    onKeyDown={(e)=> onKeyDownHandler(e)}
                     defaultValue={duration / 10}
                     className="max-w-24"
                 />
