@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useRef } from "react"
 import { Timers } from "../../contexts/Timers"
 import { FaAngleUp, FaAngleDown } from "react-icons/fa"
 import { FaXmark } from "react-icons/fa6"
@@ -7,26 +7,76 @@ import Palette from "./Palette.jsx"
 function Timer({ duration, id, color }) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
-    // Change the duration of a timer
-    function updateTime(e) {
-        let newDuration = e.target.value
+    console.log(duration)
+
+    //To retrieve the value of the minutes input
+    let inpMinRef = useRef(parseInt(Math.random() * 10 ** 6))
+
+    //To retrieve the value of the seconds input
+    let inpSecRef = useRef(parseInt(Math.random() * 10 ** 6))
+
+    function getFullMinutes(tenth){
+        return parseInt(tenth / 600)
+    }
+
+    function getRemainingSecs(tenth){
+        return parseInt( (tenth % 600) / 10 )
+    }
+
+    // Change the duration of a timer using minutes input
+    function updateTimeMinutes(e){
+        let newMinutes = e.target.value
+
+        let updatedTimerIndex = currentProfile.timers.findIndex(
+            (timer) => timer.id == id
+        )
+
+        let zeroMinutes = ( parseInt(newMinutes) == 0 && inpSecRef.current.value > 0)
+
         let regex = /^\d+$/g
 
-        if (newDuration.match(regex) && parseInt(newDuration) > 0) {
-            let updatedTimerIndex = currentProfile.timers.findIndex(
-                (timer) => timer.id == id
-            )
+        if ( newMinutes.match(regex) && parseInt(newMinutes) >= 0 ) {
+            // We don't want a timer with no mins and no sec 
+            if ( parseInt(newMinutes) > 0 || zeroMinutes){
+                currentProfile.timers[updatedTimerIndex].duration =
+                ( parseInt(newMinutes) * 600 ) + (inpSecRef.current.value * 10)
 
-            currentProfile.timers[updatedTimerIndex].duration =
-                parseInt(newDuration) * 10
+                updateCurrentProfile(currentProfile)
+            } else {
+                e.target.value = 1
+            }
 
-            updateCurrentProfile(currentProfile)
+        } else if (newMinutes != '') {
+            e.target.value = getFullMinutes(duration)    
+        }
+    }
 
-        } else if (newDuration == "") {
-            // Do nothing
+    // Change the duration of a timer using seconds input
+    function updateTimeSeconds(e) {
+        let newSeconds = e.target.value
+        let regex = /^\d+$/g
+        
+        let fullMin = inpMinRef.current.value
+        let fullMinTenthSec = fullMin * 600 
 
-        } else {
-            e.target.value = duration / 10
+        if ( newSeconds.match(regex) && ( newSeconds <= 59) ) {
+            // We don't want a timer with no mins and no sec 
+            if ( parseInt(newSeconds) > 0 || ( parseInt(newSeconds) == 0 && inpMinRef.current.value > 0)){
+
+                let updatedTimerIndex = currentProfile.timers.findIndex(
+                    (timer) => timer.id == id
+                )
+    
+                currentProfile.timers[updatedTimerIndex].duration =
+                fullMinTenthSec + parseInt(newSeconds) * 10
+    
+                updateCurrentProfile(currentProfile)
+            } else {
+                e.target.value = 1
+            }
+
+        } else if (newSeconds != '') {
+            e.target.value = getRemainingSecs(duration)    
         }
     }
 
@@ -90,14 +140,35 @@ function Timer({ duration, id, color }) {
                     <Palette intervalId={id} />
                 </div>
 
-                <input
-                    type="number"
-                    inputMode="numeric"
-                    onChange={(e) => updateTime(e)}
-                    onKeyDown={(e)=> onKeyDownHandler(e)}
-                    defaultValue={duration / 10}
-                    className="max-w-24"
-                />
+                <div className="relative">
+                    <div className="absolute right-1">m</div>
+
+                    <input
+                        ref={inpMinRef}
+                        type="text"
+                        inputMode="numeric"
+                        onChange={(e) => updateTimeMinutes(e)}
+                        onKeyDown={(e)=> onKeyDownHandler(e)}
+                        defaultValue={getFullMinutes(duration)}
+                        className="max-w-24"
+                    />
+                </div>
+                
+                
+                <div className="relative">
+                    <div className="absolute right-1 ">s</div>
+
+                    <input
+                        ref={inpSecRef}
+                        type="text"
+                        inputMode="numeric"
+                        onChange={(e) => updateTimeSeconds(e)}
+                        onKeyDown={(e)=> onKeyDownHandler(e)}
+                        defaultValue={getRemainingSecs(duration)}
+                        className="max-w-24"
+                    />
+                </div>
+                
             </div>
             
 
