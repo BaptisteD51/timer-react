@@ -7,8 +7,6 @@ import Palette from "./Palette.jsx"
 function Timer({ duration, id, color }) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
-    console.log(duration)
-
     //To retrieve the value of the minutes input
     let inpMinRef = useRef(parseInt(Math.random() * 10 ** 6))
 
@@ -125,6 +123,7 @@ function Timer({ duration, id, color }) {
     return (
         <div
             className={`${color} my-4 py-4 px-6 rounded-full flex justify-between items-center gap-4`}
+            draggable
         >
             <div className="flex flex-col justify-between justify-self-start">
                 <button onClick={() => changeTimerPosition(id, -1)}>
@@ -150,7 +149,7 @@ function Timer({ duration, id, color }) {
                         onChange={(e) => updateTimeMinutes(e)}
                         onKeyDown={(e)=> onKeyDownHandler(e)}
                         defaultValue={getFullMinutes(duration)}
-                        className="max-w-24"
+                        className="max-w-10"
                     />
                 </div>
                 
@@ -165,7 +164,7 @@ function Timer({ duration, id, color }) {
                         onChange={(e) => updateTimeSeconds(e)}
                         onKeyDown={(e)=> onKeyDownHandler(e)}
                         defaultValue={getRemainingSecs(duration)}
-                        className="max-w-24"
+                        className="max-w-9"
                     />
                 </div>
                 
