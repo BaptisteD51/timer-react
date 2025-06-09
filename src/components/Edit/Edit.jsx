@@ -9,18 +9,18 @@ function Edit({ updateIsRunning }){
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
     let {draggedItem,updateDraggedItem,dragProps} = useDragAndDrop(onDragStartCallBack,onDropCallBack)
+
     function onDragStartCallBack(id){
         updateDraggedItem(id)
     }
 
     function onDropCallBack(id){
-        //Retrieve the dragged timer by its id
-        let draggedTimer = currentProfile.timers.find((timer)=> timer.id == draggedItem)
-
         //The index of the dragged timer
         let draggedTimerIndex = currentProfile.timers.findIndex((timer)=> timer.id == draggedItem)
-        //The index of the dropeed on timer
+        //The index of the droped on timer
         let dropOnTimerIndex = currentProfile.timers.findIndex((timer)=> timer.id == id)
+
+        let draggedTimer = currentProfile.timers[draggedTimerIndex]
 
         //Destroys the dragged timer at its former position
         currentProfile.timers.splice(draggedTimerIndex,1)
@@ -55,27 +55,6 @@ function Edit({ updateIsRunning }){
             updateProfiles(updatedProfiles)
         }
         
-    }
-
-    function onDragStartCallBack(id){
-        updateDraggedItem(id)
-    }
-
-    function onDropCallBack(id){
-        //Retrieve the dragged timer by its id
-        let draggedTimer = currentProfile.timers.find((timer)=> timer.id == draggedItem)
-
-        //The index of the dragged timer
-        let draggedTimerIndex = currentProfile.timers.findIndex((timer)=> timer.id == draggedItem)
-        //The index of the dropeed on timer
-        let dropOnTimerIndex = currentProfile.timers.findIndex((timer)=> timer.id == id)
-
-        //Destroys the dragged timer at its former position
-        currentProfile.timers.splice(draggedTimerIndex,1)
-        //Put the dragged timer after the dropped on timmer
-        currentProfile.timers.splice(dropOnTimerIndex,0,draggedTimer)
-
-        updateCurrentProfile(currentProfile)
     }
 
     // Display to modify the timer
@@ -115,9 +94,9 @@ function Edit({ updateIsRunning }){
                     {currentProfile.timers.map((timer) => (
                         <div
                             key={timer.id}
-                            onDragStart={(e) => dragProps.handleDragStart(e,timer.id) }
+                            onDragStart={(e) => dragProps.handleDragStart(e, 'timer', timer.id) }
                             onDragOver={dragProps.handleDragOver}
-                            onDrop={(e) => dragProps.handleDropOver(e, timer.id)}
+                            onDrop={(e) => dragProps.handleDropOver(e, 'timer', timer.id)}
                         >
                             <Timer
                                 duration={timer.duration}

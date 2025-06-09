@@ -2,11 +2,14 @@ import { useState } from "react"
 
 function useDragAndDrop(onDragStartCallBack, onDropCallBack){
     let [draggedItem, updateDraggedItem] = useState(null)
-    
+
     /**
      * When we start dragging a profile
      */
-    function handleDragStart(e, ...args){
+    function handleDragStart(e, type, ...args){
+        // Sets the type of dragged object
+        e.dataTransfer.setData('text/plain', type)
+
         onDragStartCallBack(...args)
     }
 
@@ -20,9 +23,13 @@ function useDragAndDrop(onDragStartCallBack, onDropCallBack){
     /**
      * When we drop the dragged profile over 
      */
-    function handleDropOver(e, ...args){
+    function handleDropOver(e, type, ...args){
         e.preventDefault()
-        onDropCallBack(...args)
+        
+        // Checks if the dropped item is of the same type
+        if ( e.dataTransfer.getData('text/plain') == type ){
+            onDropCallBack(...args)
+        }
     }
 
     return {

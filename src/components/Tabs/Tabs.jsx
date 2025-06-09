@@ -1,11 +1,12 @@
 import { useContext, useState } from "react"
 import { Timers } from "../../contexts/Timers"
 import { FaPlus } from "react-icons/fa";
+import useDragAndDrop from "../../hooks/useDragAndDrop";
 
 function Tabs({isRunning,updateIsRunning,pause,updatePause}) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
-    let [draggedPrId, updateDraggedPrId] = useState(null)
+    let {draggedItem, updateDraggedItem, dragProps} = useDragAndDrop(onDragStartCallback,onDropOverCallBack) 
 
     function SelectProfile(profile) {
         // Get all profiles
@@ -75,25 +76,16 @@ function Tabs({isRunning,updateIsRunning,pause,updatePause}) {
     /**
      * When we start dragging a profile
      */
-    function handleDragStart(e, id){
-        updateDraggedPrId(id)
-    }
-
-    /**
-     * Allow to drop something on the profile
-     */
-    function handleDragOver(e){
-        e.preventDefault()
+    function onDragStartCallback(id){
+        updateDraggedItem(id)
     }
 
     /**
      * When we drop the dragged profile over 
      */
-    function handleDropHover(e, id){
-        e.preventDefault()
-
+    function onDropOverCallBack(id){
         let updatedProfiles = [...profiles]
-        let draggedPrPos = updatedProfiles.findIndex(profile => profile.id == draggedPrId)
+        let draggedPrPos = updatedProfiles.findIndex(profile => profile.id == draggedItem)
         let dropOnPrPos = updatedProfiles.findIndex(profile => profile.id == id)
 
         let draggedPr = updatedProfiles[draggedPrPos]
@@ -119,9 +111,9 @@ function Tabs({isRunning,updateIsRunning,pause,updatePause}) {
                         } p-4 rounded-l-xl flex justify-center items-center`}
                         onClick={() => SelectProfile(profile)}
                         draggable
-                        onDragStart={(e) => handleDragStart(e, profile.id)}
-                        onDragOver={(e)=> handleDragOver(e)}
-                        onDrop={(e) => handleDropHover(e, profile.id)}
+                        onDragStart={(e) => dragProps.handleDragStart(e, 'profile', profile.id)}
+                        onDragOver={dragProps.handleDragOver}
+                        onDrop={(e) => dragProps.handleDropOver(e, 'profile', profile.id)}
                     >
                         <button
                             className="[writing-mode:vertical-lr]"
