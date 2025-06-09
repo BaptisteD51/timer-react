@@ -36,7 +36,7 @@ function Edit({ updateIsRunning }){
         let newTimer = {
             running: false,
             duration: 50,
-            current: 0,
+            current: 50,
             id: newId,
             color:"bg-orange-400"
         }

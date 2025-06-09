@@ -25,15 +25,16 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
                 let runningTimerIndex = prTimers.findIndex(
                     (timer) => timer.running
                 )
+
                 // if the countdown is already started
                 if (runningTimerIndex != -1) {
-                    prTimers[runningTimerIndex].current++
-                    
+                    prTimers[runningTimerIndex].current--
+
                     // Go to the next timer if end of the duration
                     if (
-                        prTimers[runningTimerIndex].current >=
-                        prTimers[runningTimerIndex].duration
+                        prTimers[runningTimerIndex].current <= 0
                     ) {
+
                         //if there is a timer after
                         if (runningTimerIndex < prTimers.length - 1) {
                             bip.play()
@@ -48,7 +49,7 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
                         }
                     }
                 }
-                // launch the count down
+                // Launch the count down
                 else {
                     prTimers[0].running = true
                     prTimers[0].current += 1
@@ -99,7 +100,7 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
     // Reset all timers and return timers
     function resetTimers(timers) {
         timers = timers.map((timer) => {
-            timer.current = 0
+            timer.current = timer.duration
             timer.running = false
             return timer
         })
@@ -155,6 +156,7 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
                         duration={timer.duration}
                         current={timer.current}
                         color={timer.color}
+                        running={timer.running}
                     ></Counter>
                 ))}
             </div>

@@ -12,21 +12,21 @@ export const TimersProvider = ({children}) => {
                 {
                     running: false,
                     duration: 50,
-                    current: 0,
+                    current: 50,
                     id: 123456,
                     color:"bg-blue-500"
                 },
                 {
                     running: false,
                     duration: 30,
-                    current: 0,
+                    current: 30,
                     id: 153461,
                     color:"bg-amber-900"
                 },
                 {
                     running: false,
                     duration: 100,
-                    current: 0,
+                    current: 100,
                     id: 457963,
                     color:"bg-fuchsia-500"
                 },
@@ -40,7 +40,7 @@ export const TimersProvider = ({children}) => {
                 {
                     running: false,
                     duration: 100,
-                    current: 0,
+                    current: 100,
                     id: 654321,
                     color:"bg-orange-400"
                 }

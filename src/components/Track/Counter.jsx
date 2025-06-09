@@ -1,6 +1,6 @@
 import { getFullMinutes, getRemainingSecs, getRemainingTenths} from '../../functions/functions.js'
 
-function Counter({ current, duration, color }) {
+function Counter({ current, duration, color, running }) {
     let fullMinDur = getFullMinutes(duration)
     let remSecDur  = getRemainingSecs(duration)
 
@@ -19,7 +19,7 @@ function Counter({ current, duration, color }) {
             justify-between
             text-center
             w-48
-            ${current == duration || current == 0 ? "brightness-[60%]" : "brightness-[140%] scale-125"}
+            ${running ? "brightness-[140%] scale-125" : "brightness-[60%]"}
             `}
         >
 

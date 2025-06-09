@@ -34,7 +34,7 @@ function Tabs({isRunning,updateIsRunning,pause,updatePause}) {
 
             updatedProfiles.forEach(profile => {
                 profile.timers.forEach(timer =>{
-                    timer.current = 0
+                    timer.current = timer.duration
                     timer.running = false
                 })
             })
@@ -63,7 +63,7 @@ function Tabs({isRunning,updateIsRunning,pause,updatePause}) {
                 {
                     running: false,
                     duration: 100,
-                    current: 0,
+                    current: 100,
                     id: newIntervalId,
                     color:"bg-orange-400"
                 },

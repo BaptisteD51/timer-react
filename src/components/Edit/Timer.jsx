@@ -17,6 +17,7 @@ function Timer({ duration, id, color }) {
     // Change the duration of a timer using minutes input
     function updateTimeMinutes(e){
         let newMinutes = e.target.value
+        let newDuration = ( parseInt(newMinutes) * 600 ) + (inpSecRef.current.value * 10)
 
         let updatedTimerIndex = currentProfile.timers.findIndex(
             (timer) => timer.id == id
@@ -29,8 +30,8 @@ function Timer({ duration, id, color }) {
         if ( newMinutes.match(regex) && parseInt(newMinutes) >= 0 ) {
             // We don't want a timer with no mins and no sec 
             if ( parseInt(newMinutes) > 0 || zeroMinutes){
-                currentProfile.timers[updatedTimerIndex].duration =
-                ( parseInt(newMinutes) * 600 ) + (inpSecRef.current.value * 10)
+                currentProfile.timers[updatedTimerIndex].duration = newDuration
+                currentProfile.timers[updatedTimerIndex].current = newDuration
 
                 updateCurrentProfile(currentProfile)
             } else {
@@ -50,6 +51,8 @@ function Timer({ duration, id, color }) {
         let fullMin = inpMinRef.current.value
         let fullMinTenthSec = fullMin * 600 
 
+        let newDuration = fullMinTenthSec + parseInt(newSeconds) * 10
+
         if ( newSeconds.match(regex) && ( newSeconds <= 59) ) {
             // We don't want a timer with no mins and no sec 
             if ( parseInt(newSeconds) > 0 || ( parseInt(newSeconds) == 0 && inpMinRef.current.value > 0)){
@@ -57,9 +60,9 @@ function Timer({ duration, id, color }) {
                 let updatedTimerIndex = currentProfile.timers.findIndex(
                     (timer) => timer.id == id
                 )
-    
-                currentProfile.timers[updatedTimerIndex].duration =
-                fullMinTenthSec + parseInt(newSeconds) * 10
+                
+                currentProfile.timers[updatedTimerIndex].duration = newDuration
+                currentProfile.timers[updatedTimerIndex].current  = newDuration
     
                 updateCurrentProfile(currentProfile)
             } else {
