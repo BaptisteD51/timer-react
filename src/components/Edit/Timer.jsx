@@ -116,6 +116,11 @@ function Timer({ duration, id, color }) {
         }
     }
 
+    // Select the whole field when clicking
+    function onFocusHandler(e){
+        e.target.select()
+    }
+
     return (
         <div
             className={`${color} my-4 py-4 px-6 rounded-full flex justify-between items-center gap-4`}
@@ -142,6 +147,7 @@ function Timer({ duration, id, color }) {
                         inputMode="numeric"
                         onChange={(e) => updateTimeMinutes(e)}
                         onKeyDown={(e)=> onKeyDownHandler(e)}
+                        onFocus={ (e)=> onFocusHandler(e) }
                         defaultValue={getFullMinutes(duration)}
                         className="max-w-10"
                     />
@@ -155,6 +161,7 @@ function Timer({ duration, id, color }) {
                         inputMode="numeric"
                         onChange={(e) => updateTimeSeconds(e)}
                         onKeyDown={(e)=> onKeyDownHandler(e)}
+                        onFocus={(e)=> onFocusHandler(e) }
                         defaultValue={getRemainingSecs(duration)}
                         className="max-w-9"
                     />
