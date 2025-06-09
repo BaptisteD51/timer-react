@@ -139,9 +139,7 @@ function Timer({ duration, id, color }) {
                     <Palette intervalId={id} />
                 </div>
 
-                <div className="relative">
-                    <div className="absolute right-1">m</div>
-
+                <div className="relative after:content-['m'] after:absolute after:right-1">
                     <input
                         ref={inpMinRef}
                         type="text"
@@ -154,9 +152,7 @@ function Timer({ duration, id, color }) {
                 </div>
                 
                 
-                <div className="relative">
-                    <div className="absolute right-1 ">s</div>
-
+                <div className="relative after:content-['s'] after:absolute after:right-1">
                     <input
                         ref={inpSecRef}
                         type="text"
