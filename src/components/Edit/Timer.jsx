@@ -2,6 +2,7 @@ import { useContext, useRef } from "react"
 import { Timers } from "../../contexts/Timers"
 import { FaAngleUp, FaAngleDown } from "react-icons/fa"
 import { FaXmark } from "react-icons/fa6"
+import { getFullMinutes, getRemainingSecs} from '../../functions/functions.js'
 import Palette from "./Palette.jsx"
 
 function Timer({ duration, id, color }) {
@@ -12,14 +13,6 @@ function Timer({ duration, id, color }) {
 
     //To retrieve the value of the seconds input
     let inpSecRef = useRef(parseInt(Math.random() * 10 ** 6))
-
-    function getFullMinutes(tenth){
-        return parseInt(tenth / 600)
-    }
-
-    function getRemainingSecs(tenth){
-        return parseInt( (tenth % 600) / 10 )
-    }
 
     // Change the duration of a timer using minutes input
     function updateTimeMinutes(e){

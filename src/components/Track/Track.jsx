@@ -28,6 +28,7 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
                 // if the countdown is already started
                 if (runningTimerIndex != -1) {
                     prTimers[runningTimerIndex].current++
+                    
                     // Go to the next timer if end of the duration
                     if (
                         prTimers[runningTimerIndex].current >=
