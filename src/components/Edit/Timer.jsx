@@ -4,6 +4,7 @@ import { FaAngleUp, FaAngleDown } from "react-icons/fa"
 import { FaXmark } from "react-icons/fa6"
 import { getFullMinutes, getRemainingSecs} from '../../functions/functions.js'
 import Palette from "./Palette.jsx"
+import Menu from "./Menu.jsx"
 
 function Timer({ duration, id, color }) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
@@ -169,13 +170,20 @@ function Timer({ duration, id, color }) {
                 
             </div>
             
-
-            <button
-                onClick={() => deleteTimer(id)}
-                className="bg-red-600 text-white p-2 rounded-full size-8 flex justify-center items-center"
-            >
-                <FaXmark className="text-xl" />
-            </button>
+            <div className="flex justify-center items-center gap-1">
+                <Menu 
+                    id={id}
+                    duration={duration}
+                    color={color}  
+                />
+                <button
+                    onClick={() => deleteTimer(id)}
+                    className="bg-red-600 text-white p-2 rounded-full size-8 flex justify-center items-center"
+                >
+                    <FaXmark className="text-xl" />
+                </button>
+            </div>
+            
         </div>
     )
 }
