@@ -1,13 +1,15 @@
 import { useState, useContext, useRef, useEffect } from "react"
 import { FaEllipsisV } from "react-icons/fa"
 import { Timers } from "../../contexts/Timers.jsx"
+import useMenu from '../../hooks/useMenu.js'
 
 function Menu({id,duration,color}){
-    let [shwMenu, setShwMenu] = useState(false)
     let { currentProfile, updateCurrentProfile } = useContext(Timers)
 
     // used to retrieve the elment in the dom
-        let menuRef = useRef(null)
+    let menuRef = useRef(null)
+
+    let {showMenu,setShowMenu} = useMenu(menuRef)
 
     // Replicates the timer and add it afterwards
     function duplicateProfile(){
@@ -28,32 +30,32 @@ function Menu({id,duration,color}){
         currentProfile.timers.splice(currentTimerIndex,0,dupTimer)
 
         updateCurrentProfile(currentProfile)
-        setShwMenu(false)
+        setShowMenu(false)
     }
 
     useEffect(() => {
             function handleClickOutside(e) {
                 //the left condition is there to check the existence of the ref. More robust
                 if (menuRef.current && !menuRef.current.contains(e.target)) {
-                    setShwMenu(false)
+                    setShowMenu(false)
                 }
             }
     
-            if (shwMenu) {
+            if (showMenu) {
                 document.addEventListener("mousedown", handleClickOutside)
             }
     
             return function () {
                 document.removeEventListener("mousedown", handleClickOutside)
             }
-        }, [shwMenu, setShwMenu]
+        }, [showMenu, setShowMenu]
     )
 
     return (
         <div className="relative"
         ref={menuRef}
         >
-            { shwMenu && (
+            { showMenu && (
                 <div
                     className="absolute bottom-full right-0 bg-white flex flex-wrap mb-2 rounded-lg"
                 >
@@ -67,7 +69,7 @@ function Menu({id,duration,color}){
             )}
             <button 
                 className="px-2"
-                onClick={()=>setShwMenu(!shwMenu)}
+                onClick={()=>setShowMenu(!showMenu)}
             >
                 <FaEllipsisV className="text-2xl"/>
             </button>

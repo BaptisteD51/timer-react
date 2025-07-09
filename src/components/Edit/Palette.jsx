@@ -1,5 +1,6 @@
-import { useContext, useEffect, useRef, useState } from "react"
+import { useContext, useRef } from "react"
 import { Timers } from "../../contexts/Timers.jsx"
+import useMenu from '../../hooks/useMenu.js'
 
 function Palette({ intervalId }) {
     let colors = [
@@ -13,10 +14,10 @@ function Palette({ intervalId }) {
         "bg-fuchsia-500",
     ]
 
-    let [shwColPick, updateShwColPick] = useState(false)
-
     // used to retrieve the elment in the dom
     let paletteRef = useRef(null)
+
+    let {showMenu, setShowMenu} = useMenu(paletteRef)
 
     let { currentProfile, updateCurrentProfile } = useContext(Timers)
 
@@ -30,30 +31,13 @@ function Palette({ intervalId }) {
         updateCurrentProfile(currentProfile)
     }
 
-    useEffect(() => {
-        function handleClickOutside(e) {
-            //the left condition is there to check the existence of the ref. More robust
-            if (paletteRef.current && !paletteRef.current.contains(e.target)) {
-                updateShwColPick(false)
-            }
-        }
-
-        if (shwColPick) {
-            document.addEventListener("mousedown", handleClickOutside)
-        }
-
-        return function () {
-            document.removeEventListener("mousedown", handleClickOutside)
-        }
-    }, [shwColPick, updateShwColPick])
-
     return (
         <div
             ref={paletteRef}
         >
-            {shwColPick && (
+            {showMenu && (
                 <div 
-                    className="absolute bottom-full left-1/2 bg-white flex flex-wrap w-36 p-2 gap-2 justify-center -translate-x-1/2"
+                    className="absolute bottom-full left-1/2 bg-white flex flex-wrap w-36 p-2 gap-2 justify-center -translate-x-1/2 rounded-lg mb-2"
                 >
                     {colors.map((color) => (
                         <button
@@ -61,7 +45,7 @@ function Palette({ intervalId }) {
                             key={color}
                             onClick={() => {
                                 changeIntervalColor(color, intervalId)
-                                updateShwColPick(false)
+                                setShowMenu(false)
                             }}
                         ></button>
                     ))}
@@ -70,7 +54,7 @@ function Palette({ intervalId }) {
 
             <button
                 className="bg-red-600 border-4 border-black rounded-sm size-6"
-                onClick={() => updateShwColPick(!shwColPick)}
+                onClick={() => setShowMenu(!showMenu)}
             ></button>
         </div>
     )
