@@ -1,13 +1,16 @@
 import { getFullMinutes, getRemainingSecs, getRemainingTenths} from '../../functions/functions.js'
+import { memo } from 'react'
 
-function Counter({ current, duration, color, running }) {
+// Using memo avoid re-rendering the component when the props don't change
+// That means the counter is re-rendered only when running
+const Counter = memo(function Counter({ current, duration, color, running }) {
     let fullMinDur = getFullMinutes(duration)
     let remSecDur  = getRemainingSecs(duration)
-
+    
     let fullMinCur = getFullMinutes(current)
     let remSecCur  = getRemainingSecs(current)
     let remTenCur  = getRemainingTenths(current)
-
+    
     return (
         <div
             className={`
@@ -33,6 +36,6 @@ function Counter({ current, duration, color, running }) {
             </span>
         </div>
     )
-}
+})
 
 export default Counter

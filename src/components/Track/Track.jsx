@@ -7,11 +7,11 @@ import sirenmp3 from "../../assets/audio/siren.mp3"
 import Counter from "../Track/Counter"
 
 function Track({ isRunning, updateIsRunning, pause, updatePause }) {
-    let { profiles, updateProfiles, currentProfile, updateCurrentProfile } =
+    let { updateProfiles, currentProfile, updateCurrentProfile } =
         useContext(Timers)
 
-    //Get the active profile
-    let profile = profiles.find((timer) => timer.selected)
+    //Get a copy of the active profile. In order not to work with the full context, we work with a local state
+    let [cpProfile, setCpProfile] = useState(currentProfile)
 
     // The sounds of the timer
     let bip = new Audio(bipmp3)
@@ -21,7 +21,7 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
     useEffect(() => {
         let countDown = setInterval(() => {
             if (isRunning && !pause) {
-                let prTimers = [...currentProfile.timers]
+                let prTimers = [...cpProfile.timers]
                 let runningTimerIndex = prTimers.findIndex(
                     (timer) => timer.running
                 )
@@ -55,16 +55,18 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
                     prTimers[0].current += 1
                 }
 
-                // Update the current profile timers
-                currentProfile.timers = prTimers
-                updateCurrentProfile(currentProfile)
+                // Update the copied profile timers
+                // Create a copy by value (or re-rendering won't work if by reference)
+                let updatedProfile = {...cpProfile}
+                updatedProfile.timers = prTimers
+                setCpProfile(updatedProfile)
             }
         }, 100)
 
         return () => {
             clearInterval(countDown)
         }
-    }, [profiles, isRunning, updateProfiles, pause])
+    }, [pause, isRunning, cpProfile])
 
     // Prevents the mobile screen from turning off
     useEffect(()=>{
@@ -109,9 +111,9 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
 
     function resetAll() {
 
-        let resetedTimers = resetTimers([...currentProfile.timers])
-        currentProfile.timers = resetedTimers
-        updateCurrentProfile(currentProfile)
+        let resetedTimers = resetTimers([...cpProfile.timers])
+        cpProfile.timers = resetedTimers
+        setCpProfile(cpProfile)
 
         // Reset the running and pause state
         updatePause(false)
@@ -150,7 +152,7 @@ function Track({ isRunning, updateIsRunning, pause, updatePause }) {
             </div>
 
             <div>
-                {profile.timers.map((timer) => (
+                {cpProfile.timers.map((timer) => (
                     <Counter
                         key={timer.id}
                         duration={timer.duration}
