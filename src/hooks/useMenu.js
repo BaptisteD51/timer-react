@@ -6,8 +6,6 @@ import { useState, useEffect } from "react"
 function useMenu(menuRef){
     let [showMenu, setShowMenu] = useState(false)
 
-    console.log('hello')
-
     useEffect(() => {
             function handleClickOutside(e) {
                 //the left condition is there to check the existence of the ref. More robust
