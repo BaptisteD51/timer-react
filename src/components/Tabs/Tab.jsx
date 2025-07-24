@@ -1,33 +1,13 @@
 import { useContext, useRef, useState } from "react"
 import { Timers } from "../../contexts/Timers"
+import useDragAndDrop from "../../hooks/useDragAndDrop"
 
 function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning }) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
-    
-    const tabRef = useRef(null)
-    let dragDepth = 0
-    
-    let hoverClass = 'bg-yellow-200'
 
-    function dragStartCallBack(e,type,id){
-        let data = {
-            type:type,
-            id:id
-        }
-        e.dataTransfer.setData("application/json", JSON.stringify(data) )
-    }
-
-    function dropCallBack(e,type,id){
-        let data = JSON.parse(e.dataTransfer.getData("application/json"))
-
-        if(data.type != type){
-            e.preventDefault()
-        } else {
-            e.currentTarget.classList.remove(hoverClass)
-            changeTabPosition(data.id, id)
-        }
-
-    }
+    //Drag and drop
+    let hoverClasses = ['bg-yellow-200']
+    let {handleDragEnter, handleDragLeave, handleDropOver,handleDragStart,handleDragOver} = useDragAndDrop(hoverClasses)
 
     function changeTabPosition(draggedId, dropId){
 
@@ -46,28 +26,6 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning }) 
         let updatedProfiles = [...profiles]
 
         updateProfiles(updatedProfiles)
-    }
-
-    function dragEnterCallBack(e){
-        dragDepth++
-        let data = JSON.parse(e.dataTransfer.getData("application/json"))
-        let draggedId = data.id
-
-        if (draggedId == id){
-            return
-        } 
-
-        if (dragDepth == 1){
-            e.currentTarget.classList.add(hoverClass)
-        }
-    }
-
-    function dragLeaveCallBack(e){
-        dragDepth--
-
-        if (dragDepth == 0){
-            e.currentTarget.classList.remove(hoverClass)
-        }
     }
 
     function SelectProfile(id) {
@@ -115,12 +73,12 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning }) 
             } p-4 rounded-l-xl flex justify-center items-center`}
             onClick={() => SelectProfile(id)}
             draggable
-            onDragStart={(e) => dragStartCallBack(e, "tab", id)}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => dropCallBack(e, "tab", id)}
-            onDragEnter={(e) => dragEnterCallBack(e)}
-            onDragLeave={(e) => dragLeaveCallBack(e)}
-            ref={tabRef}
+            //handleDragEnter, handleDragLeave,
+            onDragStart={(e) => handleDragStart(e, "tab", id)}
+            onDragOver={(e) => handleDragOver(e)}
+            onDrop={(e) => handleDropOver(e, "tab", id, changeTabPosition)}
+            onDragEnter={(e) => handleDragEnter(e,id)}
+            onDragLeave={(e) => handleDragLeave(e)}
         >
             <button className="[writing-mode:vertical-lr]">
                 {prName}

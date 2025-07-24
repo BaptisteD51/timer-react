@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-function useDragAndDrop(onDragStartCallBack, onDropCallBack, hoverClasses){
+function useDragAndDrop(hoverClasses){
     let [draggedItemElt, setDraggedItemElt] = useState(null)
     
     let dragDepth = 0
@@ -8,12 +8,12 @@ function useDragAndDrop(onDragStartCallBack, onDropCallBack, hoverClasses){
     /**
      * When we start dragging a profile
      */
-    function handleDragStart(e, type, data, elt, ...args){
-        // Sets the type of dragged object
-        e.dataTransfer.setData("application/json", JSON.stringify({type:type,data:data}))
-        setDraggedItemElt(elt)
-
-        onDragStartCallBack(...args)
+    function handleDragStart(e,type,id){
+        let data = {
+            type:type,
+            id:id
+        }
+        e.dataTransfer.setData("application/json", JSON.stringify(data) )
     }
 
     /**
@@ -23,76 +23,63 @@ function useDragAndDrop(onDragStartCallBack, onDropCallBack, hoverClasses){
         e.preventDefault()
     }
 
-    /**
-     * Put the hoverClass when entering a valid position
-     */
-    function handleDragEnter(e){
-        e.preventDefault()
-        let draggedOverItem = e.currentTarget
-        dragDepth++
-        //console.log(dragDepth)
-        
-        if (dragDepth == 1){
-            if(draggedOverItem != draggedItemElt){
-            hoverClasses.forEach(function(c){
-                //console.log("ajout")
-                draggedOverItem.classList.add(c)
-            })
-        }
-        }
-        
-    }
 
     /**
      * Removeing the hoverClass when leaving a valid position
      */
     function handleDragLeave(e){
-        e.preventDefault()
-        let leftItem = e.currentTarget
-        dragDepth++
-        
+        dragDepth--
+
         if (dragDepth == 0){
             hoverClasses.forEach(function(c){
-                console.log("remove")
-                leftItem.classList.remove(c)
+                e.currentTarget.classList.remove(c)
             })
         }
-            
-        //}
         
-        
-        
+    }
+
+    /**
+     * Put the hoverClass when entering a valid position
+     */
+    function handleDragEnter(e,id){
+        dragDepth++
+        let data = JSON.parse(e.dataTransfer.getData("application/json"))
+        let draggedId = data.id
+
+        if (draggedId == id){
+            return
+        } 
+
+        if (dragDepth == 1){
+            hoverClasses.forEach(function(c){
+
+                e.currentTarget.classList.add(c)
+            })
+        }
     }
 
     /**
      * When we drop the dragged profile over 
      */
-    function handleDropOver(e, type, elt,...args){
-        e.preventDefault()
-        
-        console.log('data', e.dataTransfer.getData('application/json') )
-        let object = JSON.parse(e.dataTransfer.getData('application/json'))
+    function handleDropOver(e,type,id,dropOverCallBack){
+        let data = JSON.parse(e.dataTransfer.getData("application/json"))
 
-        // Checks if the dropped item is of the same type
-        if ( e.dataTransfer.getData('application/json') == type ){
-            
-            //Remove the hover classes from dropped on elt
+        if(data.type != type){
+            e.preventDefault()
+        } else {
             hoverClasses.forEach(function(c){
-                elt.classList.remove(c)
+                e.currentTarget.classList.remove(c)
             })
-           
-            onDropCallBack(object, ...args)
+            dropOverCallBack(data.id, id)
         }
     }
 
     return {
-        dragProps:{
-            handleDragStart,
-            handleDragOver,
-            handleDropOver,
-            handleDragEnter,
-            handleDragLeave
-        }
+        handleDragEnter,
+        handleDragLeave,
+        handleDropOver,
+        handleDragStart,
+        handleDragOver,
     }
 }
 

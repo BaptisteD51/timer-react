@@ -5,6 +5,7 @@ import { FaXmark } from "react-icons/fa6"
 import { getFullMinutes, getRemainingSecs} from '../../functions/functions.js'
 import Palette from "./Palette.jsx"
 import Menu from "./Menu.jsx"
+import useDragAndDrop from "../../hooks/useDragAndDrop.js"
 
 const Timer = forwardRef(function Timer({ duration, id, color }, ref) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
@@ -123,52 +124,11 @@ const Timer = forwardRef(function Timer({ duration, id, color }, ref) {
     }
 
     //Drag and drop
-    let dragDepth = 0
-    let hoverClass = 'scale-[102%]'
+    let hoverClasses = ['scale-[103%]', 'brightness-150']
 
-    function dragEnterCallBack(e){
-        dragDepth++
-        let data = JSON.parse(e.dataTransfer.getData("application/json"))
-        let draggedId = data.id
+    let {handleDragEnter, handleDragLeave, handleDropOver,handleDragStart,handleDragOver} = useDragAndDrop(hoverClasses)
 
-        if (draggedId == id){
-            return
-        } 
-
-        if (dragDepth == 1){
-            e.currentTarget.classList.add(hoverClass)
-        }
-    }
-
-    function dragLeaveCallBack(e){
-        dragDepth--
-
-        if (dragDepth == 0){
-            e.currentTarget.classList.remove(hoverClass)
-        }
-    }
-
-    function dragStartCallBack(e,type,id){
-        let data = {
-            type:type,
-            id:id
-        }
-        e.dataTransfer.setData("application/json", JSON.stringify(data) )
-    }
-
-    function dropCallBack(e,type,id){
-        let data = JSON.parse(e.dataTransfer.getData("application/json"))
-
-        if(data.type != type){
-            e.preventDefault()
-        } else {
-            e.currentTarget.classList.remove(hoverClass)
-            modifyTimerPosition(data.id, id)
-        }
-
-    }
-
-    function modifyTimerPosition(draggedId, dropId){
+    function dropOverCallBack(draggedId, dropId){
         //The index of the dragged tab
         let draggedTimerIdx = currentProfile.timers.findIndex((pr)=> pr.id == draggedId)
         //The index of the droped on tab
@@ -191,11 +151,11 @@ const Timer = forwardRef(function Timer({ duration, id, color }, ref) {
             className={`${color} my-4 py-4 px-6 rounded-full flex justify-between items-center gap-4`}
             draggable
             ref={ref}
-            onDragStart={(e) => dragStartCallBack(e, "timer", id)}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => dropCallBack(e, "timer", id)}
-            onDragEnter={(e) => dragEnterCallBack(e)}
-            onDragLeave={(e) => dragLeaveCallBack(e)}
+            onDragStart={(e) => handleDragStart(e,"timer",id)}
+            onDragOver={(e) => handleDragOver(e)}
+            onDrop={(e) => handleDropOver(e, "timer", id, dropOverCallBack)}
+            onDragEnter={(e) => handleDragEnter(e,id)}
+            onDragLeave={(e) => handleDragLeave(e)}
         >
             <div className="flex flex-col justify-between justify-self-start">
                 <button onClick={() => changeTimerPosition(id, -1)}>
