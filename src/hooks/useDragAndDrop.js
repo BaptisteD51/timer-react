@@ -1,8 +1,4 @@
-import { useState } from "react"
-
-function useDragAndDrop(hoverClasses){
-    let [draggedItemElt, setDraggedItemElt] = useState(null)
-    
+function useDragAndDrop(hoverClasses){    
     let dragDepth = 0
 
     /**
