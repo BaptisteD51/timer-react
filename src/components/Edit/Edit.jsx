@@ -3,33 +3,10 @@ import { Timers } from "../../contexts/Timers"
 import Timer from "./Timer"
 import { MdDelete } from "react-icons/md";
 import { FaPlay, FaPlus } from "react-icons/fa";
-import useDragAndDrop from "../../hooks/useDragAndDrop.js";
 
 function Edit({ updateIsRunning }){
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
-
-    let {draggedItem,updateDraggedItem,dragProps} = useDragAndDrop(onDragStartCallBack,onDropCallBack)
-
-    function onDragStartCallBack(id){
-        updateDraggedItem(id)
-    }
-
-    function onDropCallBack(id){
-        //The index of the dragged timer
-        let draggedTimerIndex = currentProfile.timers.findIndex((timer)=> timer.id == draggedItem)
-        //The index of the droped on timer
-        let dropOnTimerIndex = currentProfile.timers.findIndex((timer)=> timer.id == id)
-
-        let draggedTimer = currentProfile.timers[draggedTimerIndex]
-
-        //Destroys the dragged timer at its former position
-        currentProfile.timers.splice(draggedTimerIndex,1)
-        //Put the dragged timer after the dropped on timmer
-        currentProfile.timers.splice(dropOnTimerIndex,0,draggedTimer)
-
-        updateCurrentProfile(currentProfile)
-    }
-
+    
     // Adds another timer to current profile
     function addNewInterval() {
         let newId = parseInt(Math.random() * 10 ** 6)
@@ -92,18 +69,12 @@ function Edit({ updateIsRunning }){
                 <div
                 >
                     {currentProfile.timers.map((timer) => (
-                        <div
-                            key={timer.id}
-                            onDragStart={(e) => dragProps.handleDragStart(e, 'timer', timer.id) }
-                            onDragOver={dragProps.handleDragOver}
-                            onDrop={(e) => dragProps.handleDropOver(e, 'timer', timer.id)}
-                        >
                             <Timer
+                                key={timer.id}
                                 duration={timer.duration}
                                 color={timer.color}
                                 id={timer.id}
                             ></Timer>
-                        </div>
                     ))}
                 </div>
 

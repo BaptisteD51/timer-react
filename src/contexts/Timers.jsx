@@ -91,7 +91,6 @@ export const TimersProvider = ({children}) => {
         updateProfiles(updatedProfiles)
     }
 
-
     return (
         <Timers.Provider value={{profiles, updateProfiles, currentProfile, updateCurrentProfile}}>
             {children}
