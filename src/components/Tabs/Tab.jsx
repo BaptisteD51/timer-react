@@ -77,7 +77,7 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning }) 
             onDragStart={(e) => handleDragStart(e, "tab", id)}
             onDragOver={(e) => handleDragOver(e)}
             onDrop={(e) => handleDropOver(e, "tab", id, changeTabPosition)}
-            onDragEnter={(e) => handleDragEnter(e,id)}
+            onDragEnter={(e) => handleDragEnter(e,"tab",id)}
             onDragLeave={(e) => handleDragLeave(e)}
         >
             <button className="[writing-mode:vertical-lr]">

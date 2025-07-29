@@ -154,7 +154,7 @@ const Timer = forwardRef(function Timer({ duration, id, color }, ref) {
             onDragStart={(e) => handleDragStart(e,"timer",id)}
             onDragOver={(e) => handleDragOver(e)}
             onDrop={(e) => handleDropOver(e, "timer", id, dropOverCallBack)}
-            onDragEnter={(e) => handleDragEnter(e,id)}
+            onDragEnter={(e) => handleDragEnter(e,"timer",id)}
             onDragLeave={(e) => handleDragLeave(e)}
         >
             <div className="flex flex-col justify-between justify-self-start">

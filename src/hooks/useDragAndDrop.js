@@ -37,12 +37,13 @@ function useDragAndDrop(hoverClasses){
     /**
      * Put the hoverClass when entering a valid position
      */
-    function handleDragEnter(e,id){
+    function handleDragEnter(e,type,id){
         dragDepth++
         let data = JSON.parse(e.dataTransfer.getData("application/json"))
         let draggedId = data.id
+        let draggedType = data.type
 
-        if (draggedId == id){
+        if ( draggedId == id || draggedType != type ){
             return
         } 
 
