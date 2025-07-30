@@ -45,7 +45,7 @@ function useDragAndDrop(hoverClasses){
 
         if ( draggedId == id || draggedType != type ){
             return
-        } 
+        }
 
         if (dragDepth == 1){
             hoverClasses.forEach(function(c){

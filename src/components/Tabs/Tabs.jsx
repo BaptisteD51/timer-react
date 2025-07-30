@@ -6,6 +6,8 @@ import Tab from "./Tab.jsx"
 
 function Tabs({isRunning,updateIsRunning,pause,updatePause}) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
+    
+    let [obj,setObj] = useState(null)
 
     function AddProfile() {
         let updatedProfiles = [...profiles]
@@ -48,6 +50,8 @@ function Tabs({isRunning,updateIsRunning,pause,updatePause}) {
                         updatePause = {updatePause}
                         isRunning = {isRunning}
                         updateIsRunning = {updateIsRunning}
+                        obj = {obj}
+                        setObj = {setObj}
                     />
                 ))}
             </ul>
