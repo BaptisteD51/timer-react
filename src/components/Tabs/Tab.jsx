@@ -68,59 +68,81 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
     }
 
     /// Drag and drop
+    let timeoutRef = useRef(null)
+    let [dragging,setDragging] = useState(null)
 
-    function handleTouchStart(e,type,id,ref){
+    function handleTouchStart(e){
         e.preventDefault()
-        console.log("je commence")
+
         //console.log('e.touches',e.touches)
-        console.log('start e.touches[0]', e.touches[0])
         //console.log(e.currentTarget)
-        if( (e.currentTarget.contains(e.touches[0].target) ) || e.currentTarget ==  e.touches[0].target){
-            console.log(obj)
-            setObj(
-                {
-                    type:type,
-                    id:id,
-                    elt:ref.current
-                }
-            )
-        } 
+        //console.log('start e.touches[0]', e.touches[0])
+        
+        timeoutRef.current = setTimeout(()=>{
+            setDragging(true)
+        }, 300)
+
+    }
+
+    // A voir si la désactivation du scroll navigateur ne se fait pas juste avec touch-action:none
+    function handleTouchMove(e){
+        e.preventDefault()
+
+        if (dragging) {
+            //if( (e.currentTarget.contains(e.touches[0].target) ) || e.currentTarget ==  e.touches[0].target){
+                let draggedElt = e.currentTarget
+                let type = draggedElt.dataset.type
+                let id = draggedElt.dataset.id
+
+                setObj(
+                    {
+                        type:type,
+                        id:id,
+                    }
+                )
+
+                console.log(obj)
+            //}
+        }
+         
     }
 
     function handleTouchEnd(e){
         e.preventDefault()
-        console.log("j'annule tout")
-        setObj(null)
-        // The touch points that have changed
-        //console.log(e.changedTouches)
-        console.log('e',e)
-        console.log('end e.changedTouches[0]',e.changedTouches[0])
-        let x = e.changedTouches[0].clientX
-        let y = e.changedTouches[0].clientY
-        
-        let eltFrmPnt = document.elementFromPoint(x,y)
+ 
+        if (!dragging || obj === null){
+            console.log("je relache pour cliquer")
+            e.currentTarget.click()
+        } else {
+            console.log("je relache pour dropper")
 
-        let tabs = document.querySelectorAll("[data-type='tab']")
+            let x = e.changedTouches[0].clientX
+            let y = e.changedTouches[0].clientY
+            
+            let eltFrmPnt = document.elementFromPoint(x,y)
 
-        tabs.forEach((tab) => {
-            if ( tab.contains(eltFrmPnt) || tab == eltFrmPnt ){
+            let tabs = document.querySelectorAll("[data-type='tab']")
 
-                if (tab.dataset.id == obj.id) {
-                    console.log('same item')
-                    return
+            tabs.forEach((tab) => {
+                if ( tab.contains(eltFrmPnt) || tab == eltFrmPnt ){
+
+                    if (tab.dataset.id == obj.id) {
+                        console.log('same item')
+                        return
+                    }
+                    console.log('valid drop position')
+                    console.log(tab.dataset.id)
+                    changeTabPosition(obj.id, tab.dataset.id)
                 }
-                console.log('valid drop position')
-                console.log(tab.dataset.id)
-                changeTabPosition(obj.id, tab.dataset.id)
-            }
-        })
+            })
+        }
         
+        setObj(null)
+        setDragging(false)
+        clearTimeout(timeoutRef.current)
     }
     
-    // A voir si la désactivation du scroll navigateur ne se fait pas juste avec touch-action:none
-    function handleTouchMove(e){
-        e.preventDefault()
-    }
+    
 
     // ref pour le drag and drop mobile
     let tabRef = useRef(null)
@@ -143,16 +165,17 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
             onDragLeave={(e) => handleDragLeave(e)}
             
             // Drag and drop mobile
-            onTouchStart={(e) => handleTouchStart(e,"tab",id,tabRef)}
+            onTouchStart={(e) => handleTouchStart(e)}
+            onTouchMove={(e) => handleTouchMove(e)}
             onTouchEnd={(e) => handleTouchEnd(e)}
+            // Block right click menu
+            onContextMenu={(e) => e.preventDefault()}
             data-id = {id}
             data-type = {"tab"}
             ref = {tabRef}
-            /* onTouchMove={(e) => handleTouchMove(e)} */
         >
             <button className="[writing-mode:vertical-lr]">
                 {prName}
-                <span className="text-red-800"> {id}</span>
             </button>
         </li>
     )
