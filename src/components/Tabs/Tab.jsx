@@ -10,8 +10,6 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
     let {handleDragEnter, handleDragLeave, handleDropOver,handleDragStart,handleDragOver} = useDragAndDrop(hoverClasses)
 
     function changeTabPosition(draggedId, dropId){
-        console.log("draggedId", draggedId)
-        console.log("dropId", dropId)
         //The index of the dragged tab
         let draggedTabIdx = profiles.findIndex((pr)=> pr.id == draggedId)
         //The index of the droped on tab
@@ -70,14 +68,28 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
     /// Drag and drop
     let timeoutRef = useRef(null)
     let [dragging,setDragging] = useState(null)
+    let overlayRef = useRef(null)
 
     function handleTouchStart(e){
         e.preventDefault()
 
-        //console.log('e.touches',e.touches)
-        //console.log(e.currentTarget)
-        //console.log('start e.touches[0]', e.touches[0])
+        //Create a clone of the dragged elt
+        let draggedElt = e.currentTarget
+        let parent = draggedElt.parentElement
+
+        let overlay = draggedElt.cloneNode(true)
+        overlay.style.display = "none"
+
+        let overlayClasses = ["fixed", "[pointer-events:none]", "bg-blue-200", "translate-x-[-50%]", "translate-y-[-50%]", "z-2", "scale-75"]
+        overlayClasses.forEach((c)=>{
+            overlay.classList.add(c)
+        })
+
+        parent.appendChild(overlay)
+
+        overlayRef.current = overlay
         
+        //Starts a timeout to make a difference between short touch and dragging
         timeoutRef.current = setTimeout(()=>{
             setDragging(true)
         }, 300)
@@ -89,20 +101,44 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
         e.preventDefault()
 
         if (dragging) {
-            //if( (e.currentTarget.contains(e.touches[0].target) ) || e.currentTarget ==  e.touches[0].target){
-                let draggedElt = e.currentTarget
-                let type = draggedElt.dataset.type
-                let id = draggedElt.dataset.id
+            //Sets the dragged obj
+            let draggedElt = e.currentTarget
+            let type = draggedElt.dataset.type
+            let id = draggedElt.dataset.id
 
-                setObj(
-                    {
-                        type:type,
-                        id:id,
+            setObj(
+                {
+                    type:type,
+                    id:id,
+                }
+            )
+
+            //Adds a class on the moved over target if valid
+            let x = e.touches[0].clientX
+            let y = e.touches[0].clientY
+
+            let movOvrElt = document.elementFromPoint(x,y)
+
+            let tabs = document.querySelectorAll("[data-type='tab']")
+
+            tabs.forEach((tab) => {
+                if ( tab == movOvrElt || tab.contains(movOvrElt)){
+
+                    // Check if not over the same elt
+                    if ( draggedElt.dataset.id != tab.dataset.id ) {
+                        tab.classList.add("bg-red-500")
                     }
-                )
 
-                console.log(obj)
-            //}
+                } else {
+                    tab.classList.remove("bg-red-500")
+                }
+            })
+
+            //Moves the clone of the dragged elt
+            let overlay = overlayRef.current
+            overlay.style.display = ""
+            overlay.style.left = x + "px" 
+            overlay.style.top = y + "px"
         }
          
     }
@@ -111,10 +147,8 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
         e.preventDefault()
  
         if (!dragging || obj === null){
-            console.log("je relache pour cliquer")
             e.currentTarget.click()
         } else {
-            console.log("je relache pour dropper")
 
             let x = e.changedTouches[0].clientX
             let y = e.changedTouches[0].clientY
@@ -127,16 +161,18 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
                 if ( tab.contains(eltFrmPnt) || tab == eltFrmPnt ){
 
                     if (tab.dataset.id == obj.id) {
-                        console.log('same item')
                         return
                     }
-                    console.log('valid drop position')
-                    console.log(tab.dataset.id)
+                    tab.classList.remove("bg-red-500")
                     changeTabPosition(obj.id, tab.dataset.id)
-                }
+                } 
             })
         }
         
+        let overlay = overlayRef.current
+        overlay.remove()
+        overlayRef.current = null
+
         setObj(null)
         setDragging(false)
         clearTimeout(timeoutRef.current)
@@ -146,38 +182,38 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
 
     // ref pour le drag and drop mobile
     let tabRef = useRef(null)
-    //console.log(tabRef)
-    //console.log(obj)
 
     return (
-        <li
-            className={`${
-                selected ? "bg-orange-300" : ""
-            } p-4 rounded-l-xl flex justify-center items-center [touch-action:none]`}
-            onClick={() => SelectProfile(id)}
-            draggable
+        <>
+            <li
+                className={`${
+                    selected ? "bg-orange-300" : ""
+                } p-4 rounded-l-xl flex justify-center items-center [touch-action:none]`}
+                onClick={() => SelectProfile(id)}
+                draggable
 
-            // Drag and drop mouse
-            onDragStart={(e) => handleDragStart(e, "tab", id)}
-            onDragOver={(e) => handleDragOver(e)}
-            onDrop={(e) => handleDropOver(e, "tab", id, changeTabPosition)}
-            onDragEnter={(e) => handleDragEnter(e,"tab",id)}
-            onDragLeave={(e) => handleDragLeave(e)}
-            
-            // Drag and drop mobile
-            onTouchStart={(e) => handleTouchStart(e)}
-            onTouchMove={(e) => handleTouchMove(e)}
-            onTouchEnd={(e) => handleTouchEnd(e)}
-            // Block right click menu
-            onContextMenu={(e) => e.preventDefault()}
-            data-id = {id}
-            data-type = {"tab"}
-            ref = {tabRef}
-        >
-            <button className="[writing-mode:vertical-lr]">
-                {prName}
-            </button>
-        </li>
+                // Drag and drop mouse
+                onDragStart={(e) => handleDragStart(e, "tab", id)}
+                onDragOver={(e) => handleDragOver(e)}
+                onDrop={(e) => handleDropOver(e, "tab", id, changeTabPosition)}
+                onDragEnter={(e) => handleDragEnter(e,"tab",id)}
+                onDragLeave={(e) => handleDragLeave(e)}
+                
+                // Drag and drop mobile
+                onTouchStart={(e) => handleTouchStart(e)}
+                onTouchMove={(e) => handleTouchMove(e)}
+                onTouchEnd={(e) => handleTouchEnd(e)}
+                // Block right click menu
+                onContextMenu={(e) => e.preventDefault()}
+                data-id = {id}
+                data-type = {"tab"}
+                ref = {tabRef}
+            >
+                <button className="[writing-mode:vertical-lr]">
+                    {prName}
+                </button>
+            </li>
+        </>
     )
 }
 
