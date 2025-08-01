@@ -1,4 +1,4 @@
-import { useContext, useRef, forwardRef } from "react"
+import { useContext, useRef, forwardRef, useState } from "react"
 import { Timers } from "../../contexts/Timers"
 import { FaAngleUp, FaAngleDown } from "react-icons/fa"
 import { FaXmark } from "react-icons/fa6"
@@ -7,7 +7,7 @@ import Palette from "./Palette.jsx"
 import Menu from "./Menu.jsx"
 import useDragAndDrop from "../../hooks/useDragAndDrop.js"
 
-const Timer = forwardRef(function Timer({ duration, id, color }, ref) {
+function Timer({ duration, id, color, obj, setObj }) {
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
 
     //To retrieve the value of the minutes input
@@ -146,16 +146,147 @@ const Timer = forwardRef(function Timer({ duration, id, color }, ref) {
         updateCurrentProfile(updatedProfile)
     }
 
+    ///Drag and drop mobile
+    /// Drag and drop
+        let timeoutRef = useRef(null)
+        let [dragging,setDragging] = useState(null)
+        let overlayRef = useRef(null)
+    
+        function handleTouchStart(e){
+            e.preventDefault()
+    
+            //Create a clone of the dragged elt
+            let draggedElt = e.currentTarget
+            let parent = draggedElt.parentElement
+    
+            let overlay = draggedElt.cloneNode(true)
+            overlay.style.display = "none"
+    
+            let overlayClasses = ["fixed", "[pointer-events:none]", "bg-blue-200", "translate-x-[-50%]", "translate-y-[-50%]", "z-2", "scale-75"]
+            overlayClasses.forEach((c)=>{
+                overlay.classList.add(c)
+            })
+    
+            parent.appendChild(overlay)
+    
+            overlayRef.current = overlay
+            
+            //Starts a timeout to make a difference between short touch and dragging
+            timeoutRef.current = setTimeout(()=>{
+                setDragging(true)
+            }, 300)
+    
+        }
+    
+        // A voir si la désactivation du scroll navigateur ne se fait pas juste avec touch-action:none
+        function handleTouchMove(e){
+            e.preventDefault()
+    
+            if (dragging) {
+                //Sets the dragged obj
+                let draggedElt = e.currentTarget
+                let type = draggedElt.dataset.type
+                let id = draggedElt.dataset.id
+    
+                setObj(
+                    {
+                        type:type,
+                        id:id,
+                    }
+                )
+    
+                //Adds a class on the moved over target if valid
+                let x = e.touches[0].clientX
+                let y = e.touches[0].clientY
+    
+                let movOvrElt = document.elementFromPoint(x,y)
+    
+                let tabs = document.querySelectorAll("[data-type='tab']")
+    
+                tabs.forEach((tab) => {
+                    if ( tab == movOvrElt || tab.contains(movOvrElt)){
+    
+                        // Check if not over the same elt
+                        if ( draggedElt.dataset.id != tab.dataset.id ) {
+                            tab.classList.add("bg-red-500")
+                        }
+    
+                    } else {
+                        tab.classList.remove("bg-red-500")
+                    }
+                })
+    
+                //Moves the clone of the dragged elt
+                let overlay = overlayRef.current
+                overlay.style.display = ""
+                overlay.style.left = x + "px" 
+                overlay.style.top = y + "px"
+            }
+        }
+
+        function handleTouchEnd(e){
+            e.preventDefault()
+            let x = e.changedTouches[0].clientX
+            let y = e.changedTouches[0].clientY
+                
+            let eltFrmPnt = document.elementFromPoint(x,y)
+
+            if (!dragging || obj === null){
+                //If the cibled element is svg -> click() doesn't work 
+                let svg = eltFrmPnt.closest("svg")
+
+                if (svg !== null) {
+                    svg.parentElement.click()
+                } else {
+                    eltFrmPnt.click()
+                    // For input elements
+                    eltFrmPnt.focus()
+                }
+
+
+            } else {
+
+                let tabs = document.querySelectorAll("[data-type='tab']")
+
+                tabs.forEach((tab) => {
+                    if ( tab.contains(eltFrmPnt) || tab == eltFrmPnt ){
+
+                        if (tab.dataset.id == obj.id) {
+                            return
+                        }
+                        tab.classList.remove("bg-red-500")
+                        dropOverCallBack(obj.id, tab.dataset.id)
+                    } 
+                })
+            }
+            
+            let overlay = overlayRef.current
+            overlay.remove()
+            overlayRef.current = null
+
+            setObj(null)
+            setDragging(false)
+            clearTimeout(timeoutRef.current)
+        } 
+
     return (
         <div
-            className={`${color} my-4 py-4 px-6 rounded-full flex justify-between items-center gap-4`}
+            className={`${color} my-4 py-4 px-6 rounded-full flex justify-between items-center gap-4 [touch-action:none]`}
             draggable
-            ref={ref}
             onDragStart={(e) => handleDragStart(e,"timer",id)}
             onDragOver={(e) => handleDragOver(e)}
             onDrop={(e) => handleDropOver(e, "timer", id, dropOverCallBack)}
             onDragEnter={(e) => handleDragEnter(e,"timer",id)}
             onDragLeave={(e) => handleDragLeave(e)}
+
+            // Drag and drop mobile
+            onTouchStart={(e) => handleTouchStart(e)}
+            onTouchMove={(e) => handleTouchMove(e)}
+            onTouchEnd={(e) => handleTouchEnd(e)}
+            // Block right click menu
+            onContextMenu={(e) => e.preventDefault()}
+            data-id = {id}
+            data-type = {"tab"}
         >
             <div className="flex flex-col justify-between justify-self-start">
                 <button onClick={() => changeTimerPosition(id, -1)}>
@@ -216,6 +347,6 @@ const Timer = forwardRef(function Timer({ duration, id, color }, ref) {
             
         </div>
     )
-})
+}
 
 export default Timer

@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { Timers } from "../../contexts/Timers"
 import Timer from "./Timer"
 import { MdDelete } from "react-icons/md";
@@ -7,6 +7,9 @@ import { FaPlay, FaPlus } from "react-icons/fa";
 function Edit({ updateIsRunning }){
     let { profiles, updateProfiles, currentProfile, updateCurrentProfile } = useContext(Timers)
     
+    // For drag and drop mobile
+    let [obj,setObj] = useState(null)
+
     // Adds another timer to current profile
     function addNewInterval() {
         let newId = parseInt(Math.random() * 10 ** 6)
@@ -74,6 +77,8 @@ function Edit({ updateIsRunning }){
                                 duration={timer.duration}
                                 color={timer.color}
                                 id={timer.id}
+                                obj={obj}
+                                setObj={setObj}
                             ></Timer>
                     ))}
                 </div>

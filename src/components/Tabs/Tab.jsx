@@ -146,15 +146,23 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
     function handleTouchEnd(e){
         e.preventDefault()
  
-        if (!dragging || obj === null){
-            e.currentTarget.click()
-        } else {
-
-            let x = e.changedTouches[0].clientX
-            let y = e.changedTouches[0].clientY
+        let x = e.changedTouches[0].clientX
+        let y = e.changedTouches[0].clientY
             
-            let eltFrmPnt = document.elementFromPoint(x,y)
+        let eltFrmPnt = document.elementFromPoint(x,y)
 
+        if (!dragging || obj === null){
+            //If the cibled element is svg -> click() doesn't work 
+            let svg = eltFrmPnt.closest("svg")
+
+            if (svg !== null) {
+                svg.parentElement.click()
+            } else {
+                eltFrmPnt.click()
+                // For input elements
+                eltFrmPnt.focus()
+            }
+        } else {
             let tabs = document.querySelectorAll("[data-type='tab']")
 
             tabs.forEach((tab) => {
@@ -178,11 +186,6 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
         clearTimeout(timeoutRef.current)
     }
     
-    
-
-    // ref pour le drag and drop mobile
-    let tabRef = useRef(null)
-
     return (
         <>
             <li
@@ -207,7 +210,6 @@ function Tab({ id, selected, prName, updatePause, isRunning, updateIsRunning,obj
                 onContextMenu={(e) => e.preventDefault()}
                 data-id = {id}
                 data-type = {"tab"}
-                ref = {tabRef}
             >
                 <button className="[writing-mode:vertical-lr]">
                     {prName}
